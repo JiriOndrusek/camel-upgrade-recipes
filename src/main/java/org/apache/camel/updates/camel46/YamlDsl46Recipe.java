@@ -91,8 +91,12 @@ public class YamlDsl46Recipe extends Recipe {
                     Yaml.Mapping m = (Yaml.Mapping) ((Yaml.Sequence)e.getValue()).getEntries().get(0).getBlock();
                     //apply correct prefix for the new 'properties' values
                     String prefix = e.getPrefix() + "  ";
-                    List<Yaml.Mapping.Entry> entries = m.getEntries().stream()
-                            .map(entry1 -> entry1.withPrefix(prefix)).collect(Collectors.toUnmodifiableList());
+                    List<Yaml.Mapping.Entry> entries = ((Yaml.Sequence)e.getValue()).getEntries().stream()
+                            //iterate over all blocks
+                            .flatMap(entry1 -> ((Yaml.Mapping)entry1.getBlock()).getEntries().stream())
+                            //apply correct prefix
+                            .map(entry2 -> entry2.withPrefix(prefix))
+                            .collect(Collectors.toList());
 
                     return e.withKey(((Yaml.Scalar) e.getKey().copyPaste()).withValue("properties"))
                             .withValue(m.copyPaste().withEntries(entries));

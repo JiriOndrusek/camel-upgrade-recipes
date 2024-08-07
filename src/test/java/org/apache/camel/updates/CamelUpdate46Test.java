@@ -94,11 +94,12 @@ public class CamelUpdate46Test implements RewriteTest {
                       - key: foo2
                         value: bar2
                 """, """
-                beans:
-                  - name: "myProcessor"
-                    type: "#class:com.foo.MyClass"
+                - beans:
+                  - name: beanFromMap
+                    type: com.acme.MyBean
                     properties:
-                      payload: "test-payload"
+                      foo: bar
+                      foo2: bar2
                 """));
     }
 
