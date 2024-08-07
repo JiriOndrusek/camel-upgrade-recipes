@@ -28,8 +28,8 @@ public class CamelUpdate45Test implements RewriteTest {
 
     @Override
     public void defaults(RecipeSpec spec) {
-        CamelTestUtil.recipe(spec, CamelTestUtil.CamelVersion.v4_5)
-                .parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v4_4,
+        CamelTestUtil.recipe(spec, CamelTestUtil.CamelVersion.v4_6)
+                .parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v4_5,
                         "camel-api", "camel-base-engine", "camel-spring-redis", "camel-opensearch", "camel-elasticsearch"))
                 .typeValidationOptions(TypeValidation.none());
     }
