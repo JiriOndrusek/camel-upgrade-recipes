@@ -16,26 +16,30 @@
  */
 package org.apache.camel.updates.camel40;
 
+import org.apache.camel.updates.AbstractUpdateTest;
 import org.apache.camel.updates.CamelTestUtil;
 import org.junit.jupiter.api.Test;
+import org.openrewrite.Parser;
 import org.openrewrite.test.RecipeSpec;
-import org.openrewrite.test.RewriteTest;
 import org.openrewrite.test.TypeValidation;
 
 import static org.openrewrite.java.Assertions.java;
 
-public class CamelEIPRecipeTest implements RewriteTest {
+public class CamelEIPRecipeTest extends AbstractUpdateTest {
 
     @Override
-    public void defaults(RecipeSpec spec) {
-        CamelTestUtil.recipe(spec, CamelTestUtil.CamelVersion.v4_0)
-                .parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v3_18,
-                        "camel-activemq", "camel-core-model"))
-                .typeValidationOptions(TypeValidation.none());
+    protected CamelTestUtil.CamelVersion recipe() {
+        return CamelTestUtil.CamelVersion.v4_0;
+    }
+
+    @Override
+    protected Parser.Builder parser() {
+        return parserFromClasspath(CamelTestUtil.CamelVersion.v3_18,
+                        "camel-activemq", "camel-core-model");
     }
 
     @Test
-    void testRemovedEIPInOptionalOut() {
+    public void testRemovedEIPInOptionalOut() {
         //language=java
         rewriteRun(java("""
                     import org.apache.camel.builder.RouteBuilder;
@@ -68,7 +72,7 @@ public class CamelEIPRecipeTest implements RewriteTest {
     }
 
     @Test
-    void testRemovedEIPOutOptionalIn() {
+    public void testRemovedEIPOutOptionalIn() {
         //language=java
         rewriteRun(java("""
                     import org.apache.camel.builder.RouteBuilder;
@@ -101,7 +105,7 @@ public class CamelEIPRecipeTest implements RewriteTest {
     }
 
     @Test
-    void testRemovedEIPOutIn() {
+    public void testRemovedEIPOutIn() {
         //language=java
         rewriteRun(java("""
                         import org.apache.camel.ExchangePattern;

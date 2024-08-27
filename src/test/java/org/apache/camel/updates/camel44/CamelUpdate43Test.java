@@ -16,23 +16,25 @@
  */
 package org.apache.camel.updates.camel44;
 
+import org.apache.camel.updates.AbstractUpdateTest;
 import org.apache.camel.updates.CamelTestUtil;
 import org.junit.jupiter.api.Test;
-import org.openrewrite.test.RecipeSpec;
-import org.openrewrite.test.RewriteTest;
-import org.openrewrite.test.TypeValidation;
+import org.openrewrite.Parser;
 
 import static org.openrewrite.java.Assertions.java;
 import static org.openrewrite.xml.Assertions.xml;
 
-public class CamelUpdate43Test implements RewriteTest {
+public class CamelUpdate43Test extends AbstractUpdateTest {
 
     @Override
-    public void defaults(RecipeSpec spec) {
-        CamelTestUtil.recipe(spec, CamelTestUtil.CamelVersion.v4_4)
-                .parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v4_0, "camel-api",
-                        "camel-core-model", "camel-support", "camel-base-engine", "camel-endpointdsl", "camel-kafka"))
-                .typeValidationOptions(TypeValidation.none());
+    protected CamelTestUtil.CamelVersion recipe() {
+        return CamelTestUtil.CamelVersion.v4_4;
+    }
+
+    @Override
+    protected Parser.Builder parser() {
+        return parserFromClasspath(CamelTestUtil.CamelVersion.v4_0, "camel-api",
+                        "camel-core-model", "camel-support", "camel-base-engine", "camel-endpointdsl", "camel-kafka");
     }
 
     /**
@@ -52,7 +54,7 @@ public class CamelUpdate43Test implements RewriteTest {
      * </p>
      */
     @Test
-    void testStateRepository() {
+    public void testStateRepository() {
         //language=java
         rewriteRun(java("""
                     import org.apache.camel.BindToRegistry;
@@ -123,7 +125,7 @@ public class CamelUpdate43Test implements RewriteTest {
      * </p>
      */
     @Test
-    void testResequenceStramConfig() {
+    public void testResequenceStramConfig() {
         //language=xml
         rewriteRun(xml("""
                 <routes>
@@ -160,7 +162,7 @@ public class CamelUpdate43Test implements RewriteTest {
      * </p>
      */
     @Test
-    void testResequenceBatchConfig() {
+    public void testResequenceBatchConfig() {
         //language=xml
         rewriteRun(xml("""
                 <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
@@ -204,7 +206,7 @@ public class CamelUpdate43Test implements RewriteTest {
      * </p>
      */
     @Test
-    void testThrottleEIP() {
+    public void testThrottleEIP() {
         //language=java
         rewriteRun(java("""
                     import org.apache.camel.builder.RouteBuilder;
@@ -291,7 +293,7 @@ public class CamelUpdate43Test implements RewriteTest {
      * </p>
      */
     @Test
-    void testKafka() {
+    public void testKafka() {
         //language=java
         rewriteRun(java(
                 """

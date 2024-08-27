@@ -16,14 +16,25 @@
  */
 package org.apache.camel.updates.camel40;
 
+import org.apache.camel.updates.AbstractUpdateTest;
 import org.apache.camel.updates.CamelTestUtil;
 import org.junit.jupiter.api.Test;
+import org.openrewrite.Parser;
 import org.openrewrite.test.RecipeSpec;
-import org.openrewrite.test.RewriteTest;
 import org.openrewrite.test.TypeValidation;
 import org.openrewrite.yaml.Assertions;
 
-public class CamelYamlTest implements RewriteTest {
+public class CamelYamlTest extends AbstractUpdateTest {
+
+    @Override
+    protected CamelTestUtil.CamelVersion recipe() {
+        return CamelTestUtil.CamelVersion.v4_0;
+    }
+
+    @Override
+    protected Parser.Builder parser() {
+        return null;
+    }
 
     @Override
     public void defaults(RecipeSpec spec) {
@@ -32,7 +43,7 @@ public class CamelYamlTest implements RewriteTest {
     }
 
     @Test
-    void testStepsToFrom1() {
+    public void testStepsToFrom1() {
         //language=yaml
         rewriteRun(Assertions.yaml("""
                   route:
@@ -50,7 +61,7 @@ public class CamelYamlTest implements RewriteTest {
     }
 
     @Test
-    void testStepsToFrom2() {
+    public void testStepsToFrom2() {
         //language=yaml
         rewriteRun(Assertions.yaml("""
                     from:
@@ -66,7 +77,7 @@ public class CamelYamlTest implements RewriteTest {
     }
 
     @Test
-    void testStepsToFrom3() {
+    public void testStepsToFrom3() {
         //language=yaml
         rewriteRun(Assertions.yaml("""
                 - from:
@@ -96,7 +107,7 @@ public class CamelYamlTest implements RewriteTest {
     }
 
     @Test
-    void testRouteConfigurationWithOnException() {
+    public void testRouteConfigurationWithOnException() {
         //language=yaml
         rewriteRun(Assertions.yaml("""
                 - route-configuration:
@@ -127,7 +138,7 @@ public class CamelYamlTest implements RewriteTest {
     }
 
     @Test
-    void testRouteConfigurationWithoutOnException() {
+    public void testRouteConfigurationWithoutOnException() {
         //language=yaml
         rewriteRun(Assertions.yaml("""
                 - route-configuration:
@@ -139,7 +150,7 @@ public class CamelYamlTest implements RewriteTest {
     }
 
     @Test
-    void testDoubleDocument() {
+    public void testDoubleDocument() {
         //language=yaml
         rewriteRun(Assertions.yaml("""
                 - route-configuration:
@@ -195,7 +206,7 @@ public class CamelYamlTest implements RewriteTest {
     }
 
     @Test
-    void testDoubleDocumentSimple() {
+    public void testDoubleDocumentSimple() {
         //language=yaml
         rewriteRun(Assertions.yaml("""
                 - route-configuration:
@@ -213,7 +224,7 @@ public class CamelYamlTest implements RewriteTest {
     }
 
     @Test
-    void testRouteConfigurationIdempotent() {
+    public void testRouteConfigurationIdempotent() {
         //language=yaml
         rewriteRun(Assertions.yaml("""
                   - route-configuration:

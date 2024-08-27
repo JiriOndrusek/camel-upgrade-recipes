@@ -16,26 +16,30 @@
  */
 package org.apache.camel.updates.camel40;
 
+import org.apache.camel.updates.AbstractUpdateTest;
 import org.apache.camel.updates.CamelTestUtil;
 import org.junit.jupiter.api.Test;
+import org.openrewrite.Parser;
 import org.openrewrite.test.RecipeSpec;
-import org.openrewrite.test.RewriteTest;
 import org.openrewrite.test.TypeValidation;
 
 import static org.openrewrite.java.Assertions.java;
 
-public class CamelBeanRecipeTest implements RewriteTest {
+public class CamelBeanRecipeTest extends AbstractUpdateTest {
 
     @Override
-    public void defaults(RecipeSpec spec) {
-        CamelTestUtil.recipe(spec, CamelTestUtil.CamelVersion.v4_0)
-                .parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v3_18,
-                        "camel-bean", "camel-core-model"))
-                .typeValidationOptions(TypeValidation.none());
+    protected CamelTestUtil.CamelVersion recipe() {
+        return CamelTestUtil.CamelVersion.v4_0;
+    }
+
+    @Override
+    protected Parser.Builder parser() {
+        return parserFromClasspath(CamelTestUtil.CamelVersion.v3_18,
+                        "camel-bean", "camel-core-model");
     }
 
     @Test
-    void testClassTypeAndInt() {
+    public void testClassTypeAndInt() {
         //language=java
         rewriteRun(java("""
                     import org.apache.camel.builder.RouteBuilder;
@@ -65,7 +69,7 @@ public class CamelBeanRecipeTest implements RewriteTest {
     }
 
     @Test
-    void testClassTypeAndBoolean() {
+    public void testClassTypeAndBoolean() {
         //language=java
         rewriteRun(java("""
                     import org.apache.camel.builder.RouteBuilder;
@@ -95,7 +99,7 @@ public class CamelBeanRecipeTest implements RewriteTest {
     }
 
     @Test
-    void testClassTypeAndFloat() {
+    public void testClassTypeAndFloat() {
         //language=java
         rewriteRun(java("""
                     import org.apache.camel.builder.RouteBuilder;
@@ -125,7 +129,7 @@ public class CamelBeanRecipeTest implements RewriteTest {
     }
 
     @Test
-    void testDoubleAndChar() {
+    public void testDoubleAndChar() {
         //language=java
         rewriteRun(java("""
                     import org.apache.camel.builder.RouteBuilder;
@@ -155,7 +159,7 @@ public class CamelBeanRecipeTest implements RewriteTest {
     }
 
     @Test
-    void testMultipleTo() {
+    public void testMultipleTo() {
         //language=java
         rewriteRun(java("""
                 import org.apache.camel.builder.RouteBuilder;

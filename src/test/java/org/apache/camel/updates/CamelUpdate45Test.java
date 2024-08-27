@@ -17,28 +17,29 @@
 package org.apache.camel.updates;
 
 import org.junit.jupiter.api.Test;
+import org.openrewrite.Parser;
 import org.openrewrite.properties.Assertions;
-import org.openrewrite.test.RecipeSpec;
-import org.openrewrite.test.RewriteTest;
-import org.openrewrite.test.TypeValidation;
 
 import static org.openrewrite.java.Assertions.java;
 
-public class CamelUpdate45Test implements RewriteTest {
+public class CamelUpdate45Test extends AbstractUpdateTest {
 
     @Override
-    public void defaults(RecipeSpec spec) {
-        CamelTestUtil.recipe(spec, CamelTestUtil.CamelVersion.v4_5)
-                .parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v4_4,
-                        "camel-api", "camel-base-engine", "camel-spring-redis", "camel-opensearch", "camel-elasticsearch"))
-                .typeValidationOptions(TypeValidation.none());
+    protected CamelTestUtil.CamelVersion recipe() {
+        return CamelTestUtil.CamelVersion.v4_5;
+    }
+
+    @Override
+    protected Parser.Builder parser() {
+        return parserFromClasspath(CamelTestUtil.CamelVersion.v4_4,
+                        "camel-api", "camel-base-engine", "camel-spring-redis", "camel-opensearch", "camel-elasticsearch");
     }
 
     /**
      * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_5.html#_camel_core">CAMEL_CORE</a>
      */
     @Test
-    void testCamelCore() {
+    public void testCamelCore() {
         //language=java
         rewriteRun(java(
                 """
@@ -103,7 +104,7 @@ public class CamelUpdate45Test implements RewriteTest {
      * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_5.html#_camel_main">CAMEL-MAIN</a>
      */
     @Test
-    void testCamelMain() {
+    public void testCamelMain() {
         rewriteRun(Assertions.properties("""
                    #test
                    camel.main.backlogTracing=true
@@ -118,7 +119,7 @@ public class CamelUpdate45Test implements RewriteTest {
      * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_5.html#_camel_spring_redis">CAMEL-SPRING-REDIS</a>
      */
     @Test
-    void testSpringRedis() {
+    public void testSpringRedis() {
         //language=java
         rewriteRun(java(
                 """
@@ -151,7 +152,7 @@ public class CamelUpdate45Test implements RewriteTest {
      * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_5.html#_camel_elasticsearch_camel_opensearch">CAMEL-ELASTICSEARCH/CAMEL-OPENSEARCH</a>
      */
     @Test
-    void testSearch() {
+    public void testSearch() {
         //language=java
         rewriteRun(java(
                 """

@@ -16,27 +16,30 @@
  */
 package org.apache.camel.updates.camel40;
 
+import org.apache.camel.updates.AbstractUpdateTest;
 import org.apache.camel.updates.CamelTestUtil;
 import org.junit.jupiter.api.Test;
+import org.openrewrite.Parser;
 import org.openrewrite.test.RecipeSpec;
-import org.openrewrite.test.RewriteTest;
 import org.openrewrite.test.TypeValidation;
 
 import static org.openrewrite.java.Assertions.java;
 
-public class CamelJmxTest implements RewriteTest {
+public class CamelJmxTest extends AbstractUpdateTest {
 
     @Override
-    public void defaults(RecipeSpec spec) {
-        CamelTestUtil
-                .recipe(spec, CamelTestUtil.CamelVersion.v4_0)
-                .parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v3_18,
-                        "camel-management-api"))
-                .typeValidationOptions(TypeValidation.none());
+    protected CamelTestUtil.CamelVersion recipe() {
+        return CamelTestUtil.CamelVersion.v4_0;
+    }
+
+    @Override
+    protected Parser.Builder parser() {
+        return parserFromClasspath(CamelTestUtil.CamelVersion.v3_18,
+                        "camel-management-api");
     }
 
     @Test
-    void testRenamedMethods() {
+    public void testRenamedMethods() {
         //language=java
         rewriteRun(java(
                 """

@@ -16,27 +16,32 @@
  */
 package org.apache.camel.updates.camel40;
 
+import org.apache.camel.updates.AbstractUpdateTest;
 import org.apache.camel.updates.CamelTestUtil;
 import org.junit.jupiter.api.Test;
+import org.openrewrite.Parser;
 import org.openrewrite.test.RecipeSpec;
 import org.openrewrite.test.RewriteTest;
 import org.openrewrite.test.TypeValidation;
 
 import static org.openrewrite.java.Assertions.java;
 
-public class CamelHttpTest implements RewriteTest {
+public class CamelHttpTest extends AbstractUpdateTest {
 
     @Override
-    public void defaults(RecipeSpec spec) {
-        CamelTestUtil.recipe(spec, CamelTestUtil.CamelVersion.v4_0)
-                .parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v3_18,
+    protected CamelTestUtil.CamelVersion recipe() {
+        return CamelTestUtil.CamelVersion.v4_0;
+    }
+
+    @Override
+    protected Parser.Builder parser() {
+        return parserFromClasspath(CamelTestUtil.CamelVersion.v3_18,
                         "camel-api", "camel-support", "camel-core-model", "camel-util", "camel-catalog", "camel-main",
-                        "httpclient-4.5.14", "httpcore-4.4.16"))
-                .typeValidationOptions(TypeValidation.none());
+                        "httpclient-4.5.14", "httpcore-4.4.16");
     }
 
     @Test
-    void testHttp() {
+    public void testHttp() {
         //language=java
         rewriteRun(java(
                 """
@@ -111,7 +116,7 @@ public class CamelHttpTest implements RewriteTest {
     }
 
     @Test
-    void testNoopHostnameVerifier() {
+    public void testNoopHostnameVerifier() {
         //language=java
         rewriteRun(java(
                 """

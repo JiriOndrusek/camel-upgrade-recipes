@@ -16,23 +16,27 @@
  */
 package org.apache.camel.updates.camel44;
 
+import org.apache.camel.updates.AbstractUpdateTest;
 import org.apache.camel.updates.CamelTestUtil;
 import org.junit.jupiter.api.Test;
+import org.openrewrite.Parser;
 import org.openrewrite.properties.Assertions;
 import org.openrewrite.test.RecipeSpec;
-import org.openrewrite.test.RewriteTest;
 import org.openrewrite.test.TypeValidation;
 
 import static org.openrewrite.java.Assertions.java;
 
-public class CamelUpdate42Test implements RewriteTest {
+public class CamelUpdate42Test extends AbstractUpdateTest {
 
     @Override
-    public void defaults(RecipeSpec spec) {
-        CamelTestUtil.recipe(spec, CamelTestUtil.CamelVersion.v4_4)
-                .parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v4_0, "camel-api",
-                        "camel-json-validator", "camel-support", "camel-saga"))
-                .typeValidationOptions(TypeValidation.none());
+    protected CamelTestUtil.CamelVersion recipe() {
+        return CamelTestUtil.CamelVersion.v4_4;
+    }
+
+    @Override
+    protected Parser.Builder parser() {
+        return parserFromClasspath(CamelTestUtil.CamelVersion.v4_0, "camel-api",
+                        "camel-json-validator", "camel-support", "camel-saga");
     }
 
     /**
@@ -40,7 +44,7 @@ public class CamelUpdate42Test implements RewriteTest {
      * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_2.html#_camel_main">The documentation</a>
      */
     @Test
-    void testCamelMainDebugger() {
+    public void testCamelMainDebugger() {
         rewriteRun(Assertions.properties("""
                    #test
                    quarkus.camel.main.debugger=true
@@ -71,7 +75,7 @@ public class CamelUpdate42Test implements RewriteTest {
      *
      */
     @Test
-    void testAddedExchangeIntoSaga() {
+    public void testAddedExchangeIntoSaga() {
         //language=java
         rewriteRun(java("""
                     import org.apache.camel.CamelContext;

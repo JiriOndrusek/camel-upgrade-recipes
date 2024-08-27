@@ -16,8 +16,10 @@
  */
 package org.apache.camel.updates.camel40;
 
+import org.apache.camel.updates.AbstractUpdateTest;
 import org.apache.camel.updates.CamelTestUtil;
 import org.junit.jupiter.api.Test;
+import org.openrewrite.Parser;
 import org.openrewrite.java.JavaParser;
 import org.openrewrite.test.RecipeSpec;
 import org.openrewrite.test.RewriteTest;
@@ -25,17 +27,20 @@ import org.openrewrite.test.TypeValidation;
 
 import static org.openrewrite.xml.Assertions.xml;
 
-public class CameXmlDslRecipeTest implements RewriteTest {
+public class CameXmlDslRecipeTest extends AbstractUpdateTest {
 
     @Override
-    public void defaults(RecipeSpec spec) {
-        CamelTestUtil.recipe(spec, CamelTestUtil.CamelVersion.v4_0)
-                .parser(JavaParser.fromJavaVersion().logCompilationWarningsAndErrors(true))
-                .typeValidationOptions(TypeValidation.none());
+    protected CamelTestUtil.CamelVersion recipe() {
+        return CamelTestUtil.CamelVersion.v4_0;
+    }
+
+    @Override
+    protected Parser.Builder parser() {
+        return JavaParser.fromJavaVersion().logCompilationWarningsAndErrors(true);
     }
 
     @Test
-    void testDescription() {
+    public void testDescription() {
         //language=xml
         rewriteRun(xml("""
                 <routes xmlns="http://camel.apache.org/schema/spring">
@@ -77,7 +82,7 @@ public class CameXmlDslRecipeTest implements RewriteTest {
     }
 
     @Test
-    void testCircuitBreakerFull() {
+    public void testCircuitBreakerFull() {
         //language=xml
         rewriteRun(xml("""
                 <differentContext>
@@ -105,7 +110,7 @@ public class CameXmlDslRecipeTest implements RewriteTest {
     }
 
     @Test
-    void testCircuitBreaker() {
+    public void testCircuitBreaker() {
         //language=xml
         rewriteRun(xml("""
                 <route>

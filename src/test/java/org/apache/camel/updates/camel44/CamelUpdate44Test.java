@@ -16,31 +16,35 @@
  */
 package org.apache.camel.updates.camel44;
 
+import org.apache.camel.updates.AbstractUpdateTest;
 import org.apache.camel.updates.CamelTestUtil;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.openrewrite.Parser;
 import org.openrewrite.properties.Assertions;
 import org.openrewrite.test.RecipeSpec;
-import org.openrewrite.test.RewriteTest;
 import org.openrewrite.test.TypeValidation;
 
 import static org.openrewrite.java.Assertions.java;
 
-public class CamelUpdate44Test implements RewriteTest {
+public class CamelUpdate44Test extends AbstractUpdateTest {
 
     @Override
-    public void defaults(RecipeSpec spec) {
-        CamelTestUtil.recipe(spec, CamelTestUtil.CamelVersion.v4_4)
-                .parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v4_0,
-                        "camel-api", "camel-util", "camel-base", "camel-core-model", "camel-json-validator"))
-                .typeValidationOptions(TypeValidation.none());
+    protected CamelTestUtil.CamelVersion recipe() {
+        return CamelTestUtil.CamelVersion.v4_4;
+    }
+
+    @Override
+    protected Parser.Builder parser() {
+        return parserFromClasspath(CamelTestUtil.CamelVersion.v4_0,
+                        "camel-api", "camel-util", "camel-base", "camel-core-model", "camel-json-validator");
     }
 
     /**
      * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_4.html#_camel_main">doc</a>
      */
     @Test
-    void testCamelMainRouteControllerProperty() {
+    public void testCamelMainRouteControllerProperty() {
         rewriteRun(Assertions.properties("""
                    #test
                    camel.main.routeControllerBackOffDelay=1000
@@ -57,7 +61,7 @@ public class CamelUpdate44Test implements RewriteTest {
      * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_4.html#_camel_main">doc</a>
      */
     @Test
-    void testCamelMainRouteControllerDashedProperty() {
+    public void testCamelMainRouteControllerDashedProperty() {
         rewriteRun(Assertions.properties("""
                    #test
                    camel.main.route-controller-back-off-max-attempts = 10
@@ -74,7 +78,7 @@ public class CamelUpdate44Test implements RewriteTest {
      * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_4.html#_camel_json_validator">doc</a>
      */
     @Test
-    void testJsonValidator() {
+    public void testJsonValidator() {
         //language=java
         rewriteRun(java(
                 """
@@ -95,7 +99,7 @@ public class CamelUpdate44Test implements RewriteTest {
      * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_4.html#_camel_core">doc</a>
      */
     @Test
-    void testStopWatchConstructor() {
+    public void testStopWatchConstructor() {
         //language=java
         rewriteRun(java("""
                     import org.apache.camel.util.StopWatch;
@@ -125,7 +129,7 @@ public class CamelUpdate44Test implements RewriteTest {
      * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_4.html#_camel_core">doc</a>
      */
     @Test
-    void testExchangeGetCreated() {
+    public void testExchangeGetCreated() {
         //language=java
         rewriteRun(java("""
                     import org.apache.camel.Exchange;
@@ -155,7 +159,7 @@ public class CamelUpdate44Test implements RewriteTest {
      * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_4.html#_camel_core">doc</a>
      */
     @Test
-    void testPropertiesLookup() {
+    public void testPropertiesLookup() {
         //language=java
         rewriteRun(java("""
                     import org.apache.camel.component.properties.PropertiesLookup;
@@ -187,7 +191,7 @@ public class CamelUpdate44Test implements RewriteTest {
      * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_4.html#_camel_core">doc</a>
      */
     @Test
-    void testJsonpath1() {
+    public void testJsonpath1() {
         //language=java
         rewriteRun(java("""
                     import org.apache.camel.builder.RouteBuilder;
@@ -219,7 +223,7 @@ public class CamelUpdate44Test implements RewriteTest {
      * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_4.html#_camel_core">doc</a>
      */
     @Test
-    void testJsonpath2() {
+    public void testJsonpath2() {
         //language=java
         rewriteRun(java("""
                     import org.apache.camel.builder.RouteBuilder;
@@ -251,7 +255,7 @@ public class CamelUpdate44Test implements RewriteTest {
      * Removed tokenize(String token, boolean regex, int group, String groupDelimiter, boolean skipFirst)
      */
     @Test
-    void testTokenize1() {
+    public void testTokenize1() {
         //language=java
         rewriteRun(java("""
                     import org.apache.camel.builder.RouteBuilder;
@@ -283,7 +287,7 @@ public class CamelUpdate44Test implements RewriteTest {
      * Removed tokenize(String token, String headerName)
      */
     @Test
-    void testTokenize2() {
+    public void testTokenize2() {
         //language=java
         rewriteRun(java("""
                     import org.apache.camel.builder.RouteBuilder;
@@ -315,7 +319,7 @@ public class CamelUpdate44Test implements RewriteTest {
      * Removed tokenize(String token, String headerName, boolean regex)
      */
     @Test
-    void testTokenize3() {
+    public void testTokenize3() {
         //language=java
         rewriteRun(java("""
                     import org.apache.camel.builder.RouteBuilder;
@@ -413,7 +417,7 @@ public class CamelUpdate44Test implements RewriteTest {
      * Removed xpath(String text, Class<?> resultType, Namespaces namespaces, String headerName) {
      */
     @Test
-    void testXpath3() {
+    public void testXpath3() {
         //language=java
         rewriteRun(java("""
                     import org.apache.camel.builder.RouteBuilder;

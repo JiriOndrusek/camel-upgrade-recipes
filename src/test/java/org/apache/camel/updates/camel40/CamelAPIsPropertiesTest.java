@@ -16,26 +16,29 @@
  */
 package org.apache.camel.updates.camel40;
 
+import org.apache.camel.updates.AbstractUpdateTest;
 import org.apache.camel.updates.CamelTestUtil;
 import org.junit.jupiter.api.Test;
+import org.openrewrite.Parser;
 import org.openrewrite.java.JavaParser;
 import org.openrewrite.properties.Assertions;
 import org.openrewrite.test.RecipeSpec;
-import org.openrewrite.test.RewriteTest;
 import org.openrewrite.test.TypeValidation;
 
-public class CamelAPIsPropertiesTest implements RewriteTest {
+public class CamelAPIsPropertiesTest extends AbstractUpdateTest {
 
     @Override
-    public void defaults(RecipeSpec spec) {
-        CamelTestUtil
-                .recipe(spec, CamelTestUtil.CamelVersion.v4_0, "org.openrewrite.java.camel.migrate.ChangePropertyValue")
-                .parser(JavaParser.fromJavaVersion().logCompilationWarningsAndErrors(true))
-                .typeValidationOptions(TypeValidation.none());
+    protected CamelTestUtil.CamelVersion recipe() {
+        return CamelTestUtil.CamelVersion.v4_0;
+    }
+
+    @Override
+    protected Parser.Builder parser() {
+        return JavaParser.fromJavaVersion().logCompilationWarningsAndErrors(true);
     }
 
     @Test
-    void testRejectedPolicyDiscardOldeste() {
+    public void testRejectedPolicyDiscardOldeste() {
         rewriteRun(Assertions.properties("""
                    #test
                    camel.threadpool.rejectedPolicy=DiscardOldest
@@ -47,7 +50,7 @@ public class CamelAPIsPropertiesTest implements RewriteTest {
     }
 
     @Test
-    void testRejectedPolicyDiscard() {
+    public void testRejectedPolicyDiscard() {
         rewriteRun(Assertions.properties("""
                    #test
                    camel.threadpool.rejectedPolicy=Discard
