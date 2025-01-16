@@ -19,21 +19,7 @@
 # Rules coming from https://camel.apache.org/manual/camel-4x-upgrade-guide-4_6.html
 #####
 
-#####
-# Update the Camel project from 4.5 to 4.6
-#####
----
-type: specs.openrewrite.org/v1beta/recipe
-name: org.apache.camel.upgrade.camel47.CamelMigrationRecipe
-displayName: Migrates `camel 4.6` application to `camel 4.7`
-description: Migrates `camel 4.6` application to `camel 4.7`.
-recipeList:
-  - org.apache.camel.upgrade.camel47.renamedClasses
-  - org.apache.camel.upgrade.camel47.XmlDsl47Recipe
-  - org.apache.camel.upgrade.camel47.YamlDsl47Recipe
-  - org.apache.camel.upgrade.camel47.Java47Recipes
-  - org.apache.camel.upgrade.camel47.removedDependencies
----
+1
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.camel.upgrade.camel47.renamedClasses
 displayName: Renamed classes for API

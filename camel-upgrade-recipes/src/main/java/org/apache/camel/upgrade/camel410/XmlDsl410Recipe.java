@@ -27,19 +27,15 @@ import java.util.Map;
 
 /**
  * <p>
- * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_7.html#_dsl">XML DSL</a>
+ * <a href="https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_10.adoc#xml-dsl-changes">XML DSL changes</a>
  * </p>
- * The Load Balancer EIP has aligned naming and the following balancers has been renamed in XML and YAML DSL:
+ * In <intercept> and <interceptSendToEndpoint> then <when> has been renamed to <onWhen>.
  */
-public class XmlDsl47Recipe extends Recipe {
+public class XmlDsl410Recipe extends Recipe {
 
     private static final Map<XPathMatcher, String> transformations = Map.of(
-            new XPathMatcher("//loadBalance/failover"), "failoverLoadBalancer",
-            new XPathMatcher("//loadBalance/random"), "randomLoadBalancer",
-            new XPathMatcher("//loadBalance/roundRobin"), "roundRobinLoadBalancer",
-            new XPathMatcher("//loadBalance/sticky"), "stickyLoadBalancer",
-            new XPathMatcher("//loadBalance/topic"), "topicLoadBalancer",
-            new XPathMatcher("//loadBalance/weighted"), "weightedLoadBalancer"
+            new XPathMatcher("//intercept/when"), "onWhen",
+            new XPathMatcher("//interceptSendToEndpoint/when"), "onWhen"
     );
 
     @Override
@@ -49,7 +45,7 @@ public class XmlDsl47Recipe extends Recipe {
 
     @Override
     public String getDescription() {
-        return "Apache Camel XML DSL migration from version 4.6 o 4.7.";
+        return "Apache Camel XML DSL migration from version 4.9 o 4.10.";
     }
 
     @Override
