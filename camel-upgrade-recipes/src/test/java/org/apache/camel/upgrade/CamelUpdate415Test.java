@@ -17,13 +17,13 @@
 package org.apache.camel.upgrade;
 
 import org.junit.jupiter.api.Test;
-import org.openrewrite.DocumentExample;
 import org.openrewrite.test.RecipeSpec;
 import org.openrewrite.test.RewriteTest;
 import org.openrewrite.test.TypeValidation;
 
 import static org.openrewrite.java.Assertions.java;
-import static org.openrewrite.properties.Assertions.properties;
+import static org.openrewrite.xml.Assertions.xml;
+import static org.openrewrite.yaml.Assertions.yaml;
 
 //class has to stay public, because test is extended in project quarkus-updates
 public class CamelUpdate415Test implements RewriteTest {
@@ -86,4 +86,150 @@ public class CamelUpdate415Test implements RewriteTest {
                 }
                 """));
     }
+
+
+    /**
+     * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_15.html#_data_formats">Data Formats</a>
+     */
+    @Test
+    void dataFormatsCryptoYamlTest() {
+        //language=yaml
+        rewriteRun(yaml(
+                """
+                       route:
+                         id: route-2366
+                         from:
+                           id: start
+                           uri: direct
+                         parameters:
+                           name: start
+                           steps:
+                             - to:
+                               id: to-4212
+                               uri: crypto
+                               parameters:
+                                 algorithmParameterRef: 111
+                                 initVectorRef: 222
+                                 keyRef: 333
+                             - to:
+                               uri: csv
+                               parameters:
+                                 formatRef: 444
+                             - to:
+                               uri: csv
+                               parameters:
+                                 formatName: 555
+                             - to:
+                               uri: flatpack
+                               parameters:
+                                 parserFactoryRef: 666
+                             - to:
+                               uri: jaxb
+                               parameters:
+                                 namespacePrefixRef: 777
+                             - to:
+                               uri: soap
+                               parameters:
+                                 namespacePrefixRef: 888
+                                 elementNameStrategyRef: 999
+                             - to:
+                               uri: swiftMx
+                               parameters:
+                                 readConfigRef: 1111
+                                 writeConfigRef: 1222
+                             - to:
+                               uri: xmlSecurity
+                               parameters:
+                                 keyOrTrustStoreParametersRef: 1333
+                  """,
+                """
+                       route:
+                         id: route-2366
+                         from:
+                           id: start
+                           uri: direct
+                         parameters:
+                           name: start
+                           steps:
+                             - to:
+                               id: to-4212
+                               uri: crypto
+                               parameters:
+                                 algorithmParameterSpec: 111
+                                 initVector: 222
+                                 key: 333
+                             - to:
+                               uri: csv
+                               parameters:
+                                 format: 444
+                             - to:
+                               uri: csv
+                               parameters:
+                                 format: 555
+                             - to:
+                               uri: flatpack
+                               parameters:
+                                 parserFactory: 666
+                             - to:
+                               uri: jaxb
+                               parameters:
+                                 namespacePrefix: 777
+                             - to:
+                               uri: soap
+                               parameters:
+                                 namespacePrefix: 888
+                                 elementNameStrategy: 999
+                             - to:
+                               uri: swiftMx
+                               parameters:
+                                 readConfig: 1111
+                                 writeConfig: 1222
+                             - to:
+                               uri: xmlSecurity
+                               parameters:
+                                 keyOrTrustStoreParameters: 1333
+                  """));
+    }
+
+
+    /**
+     *
+     */
+    @Test
+    void dataFormatsCryptoXmlTest() {
+        //language=xml
+        rewriteRun(xml(
+                """
+                  <camelContext>
+                    <route>
+                      <from uri="direct:start"/>
+                      <to uri="crypto:something" algorithmParameterRef='111' initVectorRef='222' keyRef='333'/>
+                      <to uri="csv" formatRef='444'/>
+                      <to uri="csv" formatName='555'/>
+                      <to uri="flatpack" parserFactoryRef='666'/>
+                      <to uri="jaxb" namespacePrefixRef='777'/>
+                      <to uri="soap" namespacePrefixRef='888' elementNameStrategyRef='999'/>
+                      <to uri="swiftMx" readConfigRef='1111' writeConfigRef='1222'/>
+                      <to uri="xmlSecurity" keyOrTrustStoreParametersRef='1333'/>
+                    </route>
+                  </camelContext>
+                  """,
+                """
+                  <camelContext>
+                    <route>
+                      <from uri="direct:start"/>
+                      <to uri="crypto:something" algorithmParameterSpec='111' key='333' initVector='222'/>
+                      <to uri="csv" format='444'/>
+                      <to uri="csv" format='555'/>
+                      <to uri="flatpack" parserFactory='666'/>
+                      <to uri="jaxb" namespacePrefix='777'/>
+                      <to uri="soap" namespacePrefix='888' elementNameStrategy='999'/>
+                      <to uri="swiftMx" readConfig='1111' writeConfig='1222'/>
+                      <to uri="xmlSecurity" keyOrTrustStoreParameters='1333'/>
+                    </route>
+                  </camelContext>
+                  """));
+
+    }
+
 }

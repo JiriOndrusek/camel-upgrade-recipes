@@ -291,4 +291,11 @@ public class RecipesUtil {
                 .replaceAll(mr -> mr.group(1).toUpperCase());
     }
 
+    public static String getValueFromScalar(Yaml y) {
+        if(y instanceof Yaml.Scalar) {
+            return ((Yaml.Scalar) y).getValue();
+        }
+        return null;
+    }
+
 }
