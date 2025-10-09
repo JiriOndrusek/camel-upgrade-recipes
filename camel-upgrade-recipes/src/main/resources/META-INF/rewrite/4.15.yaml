@@ -71,38 +71,74 @@ recipeList:
       methodPattern: org.apache.camel.model.dataformat.CryptoDataFormat setAlgorithmParameterRef(String)
       newMethodName: setAlgorithmParameterSpec
   - org.openrewrite.java.ChangeMethodName:
+      methodPattern: org.apache.camel.model.dataformat.CryptoDataFormat.Builder algorithmParameterRef(String)
+      newMethodName: algorithmParameterSpec
+  - org.openrewrite.java.ChangeMethodName:
       methodPattern: org.apache.camel.model.dataformat.CryptoDataFormat setKeyRef(String)
       newMethodName: setKey
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: org.apache.camel.model.dataformat.CryptoDataFormat.Builder keyRef(String)
+      newMethodName: key
   - org.openrewrite.java.ChangeMethodName:
       methodPattern: org.apache.camel.model.dataformat.CryptoDataFormat setInitVectorRef(String)
       newMethodName: setInitVector
   - org.openrewrite.java.ChangeMethodName:
+      methodPattern: org.apache.camel.model.dataformat.CryptoDataFormat.Builder initVectorRef(String)
+      newMethodName: initVector
+  - org.openrewrite.java.ChangeMethodName:
       methodPattern: org.apache.camel.model.dataformat.CsvDataFormat setFormatRef(String)
       newMethodName: setFormat
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: org.apache.camel.model.dataformat.CsvDataFormat.Builder formatRef(String)
+      newMethodName: format
   - org.openrewrite.java.ChangeMethodName:
       methodPattern: org.apache.camel.model.dataformat.CsvDataFormat setFormatName(String)
       newMethodName: setFormat
   - org.openrewrite.java.ChangeMethodName:
+      methodPattern: org.apache.camel.model.dataformat.CsvDataFormat.Builder formatName(String)
+      newMethodName: format
+  - org.openrewrite.java.ChangeMethodName:
       methodPattern: org.apache.camel.model.dataformat.FlatpackDataFormat setParserFactoryRef(String)
       newMethodName: setParserFactory
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: org.apache.camel.model.dataformat.FlatpackDataFormat.Builder parserFactoryRef(String)
+      newMethodName: parserFactory
   - org.openrewrite.java.ChangeMethodName:
       methodPattern: org.apache.camel.model.dataformat.JaxbDataFormat setNamespacePrefixRef(String)
       newMethodName: setNamespacePrefix
   - org.openrewrite.java.ChangeMethodName:
+      methodPattern: org.apache.camel.model.dataformat.JaxbDataFormat.Builder namespacePrefixRef(String)
+      newMethodName: namespacePrefix
+  - org.openrewrite.java.ChangeMethodName:
       methodPattern: org.apache.camel.model.dataformat.SoapDataFormat setNamespacePrefixRef(String)
       newMethodName: setNamespacePrefix
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: org.apache.camel.model.dataformat.SoapDataFormat.Builder namespacePrefixRef(String)
+      newMethodName: namespacePrefix
   - org.openrewrite.java.ChangeMethodName:
       methodPattern: org.apache.camel.model.dataformat.SoapDataFormat setElementNameStrategyRef(String)
       newMethodName: setElementNameStrategy
   - org.openrewrite.java.ChangeMethodName:
+      methodPattern: org.apache.camel.model.dataformat.SoapDataFormat.Builder elementNameStrategyRef(String)
+      newMethodName: elementNameStrategy
+  - org.openrewrite.java.ChangeMethodName:
       methodPattern: org.apache.camel.model.dataformat.SwiftMxDataFormat setReadConfigRef(String)
       newMethodName: setReadConfig
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: org.apache.camel.model.dataformat.SwiftMxDataFormat.Builder readConfigRef(String)
+      newMethodName: readConfig
   - org.openrewrite.java.ChangeMethodName:
       methodPattern: org.apache.camel.model.dataformat.SwiftMxDataFormat setWriteConfigRef(String)
       newMethodName: setWriteConfig
   - org.openrewrite.java.ChangeMethodName:
+      methodPattern: org.apache.camel.model.dataformat.SwiftMxDataFormat.Builder writeConfigRef(String)
+      newMethodName: writeConfigObject
+  - org.openrewrite.java.ChangeMethodName:
       methodPattern: org.apache.camel.model.dataformat.XMLSecurityDataFormat setKeyOrTrustStoreParametersRef(String)
       newMethodName: setKeyOrTrustStoreParameters
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: org.apache.camel.model.dataformat.XMLSecurityDataFormat.Builder keyOrTrustStoreParametersRef(String)
+      newMethodName: keyOrTrustStoreParameters
 #---
 ##https://camel.apache.org/manual/camel-4x-upgrade-guide-4_6.html#_yaml_dsl
 #type: specs.openrewrite.org/v1beta/recipe

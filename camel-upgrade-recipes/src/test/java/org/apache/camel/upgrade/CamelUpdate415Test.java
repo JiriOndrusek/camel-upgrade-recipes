@@ -92,7 +92,7 @@ public class CamelUpdate415Test implements RewriteTest {
      * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_15.html#_data_formats">Data Formats</a>
      */
     @Test
-    void dataformatCryptoTest() {
+    void dataformatTest() {
         //language=java
         rewriteRun(java(
                 """
@@ -171,6 +171,59 @@ public class CamelUpdate415Test implements RewriteTest {
 //                        new XMLSecurityDataFormat().setKeyOrTrustStoreParametersRef("1333");
                     }
                   }
+                """));
+    }
+
+    /**
+     * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_15.html#_data_formats">Data Formats</a>
+     */
+    @Test
+    void dataformatJavaDSLTest() {
+        //language=java
+        rewriteRun(java(
+                """
+                  import org.apache.camel.builder.RouteBuilder;
+                   
+                  public class MyRoutes extends RouteBuilder {
+                      @Override
+                      public void configure() {
+                          from("direct:format")
+                                  .marshal(dataFormat().crypto().algorithmParameterRef("111").end())
+                                  .marshal(dataFormat().crypto().keyRef("222").end())
+                                  .marshal(dataFormat().crypto().initVectorRef("333").end())
+                                  .marshal(dataFormat().csv().formatName("444").end())
+                                  .marshal(dataFormat().csv().formatRef("555").end())
+                                  .marshal(dataFormat().flatpack().parserFactoryRef("666").end())
+                                  .marshal(dataFormat().jaxb().namespacePrefixRef("777").end())
+                                  .marshal(dataFormat().soap().namespacePrefixRef("888").end())
+                                  .marshal(dataFormat().soap().elementNameStrategyRef("999").end())
+                                  .marshal(dataFormat().swiftMx().readConfigRef("1111").end())
+                                  .marshal(dataFormat().swiftMx().writeConfigRef("1222").end())
+                                  .marshal(dataFormat().xmlSecurity().keyOrTrustStoreParametersRef("1333").end());
+                      }
+                  }
+                  """, //there is missing a reference for proper parsing of XMLSecurityDataFormat
+                """
+                import org.apache.camel.builder.RouteBuilder;
+
+                public class MyRoutes extends RouteBuilder {
+                    @Override
+                    public void configure() {
+                        from("direct:format")
+                                .marshal(dataFormat().crypto().algorithmParameterSpec("111").end())
+                                .marshal(dataFormat().crypto().key("222").end())
+                                .marshal(dataFormat().crypto().initVector("333").end())
+                                .marshal(dataFormat().csv().format("444").end())
+                                .marshal(dataFormat().csv().format("555").end())
+                                .marshal(dataFormat().flatpack().parserFactory("666").end())
+                                .marshal(dataFormat().jaxb().namespacePrefix("777").end())
+                                .marshal(dataFormat().soap().namespacePrefix("888").end())
+                                .marshal(dataFormat().soap().elementNameStrategy("999").end())
+                                .marshal(dataFormat().swiftMx().readConfig("1111").end())
+                                .marshal(dataFormat().swiftMx().writeConfigObject("1222").end())
+                                .marshal(dataFormat().xmlSecurity().keyOrTrustStoreParameters("1333").end());
+                    }
+                }
                 """));
     }
 //
