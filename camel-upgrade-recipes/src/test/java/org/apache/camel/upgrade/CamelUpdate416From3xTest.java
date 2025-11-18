@@ -17,7 +17,6 @@
 package org.apache.camel.upgrade;
 
 import org.junit.jupiter.api.Test;
-import org.openrewrite.DocumentExample;
 import org.openrewrite.test.RecipeSpec;
 import org.openrewrite.test.RewriteTest;
 import org.openrewrite.test.TypeValidation;
@@ -27,47 +26,51 @@ import static org.openrewrite.xml.Assertions.xml;
 import static org.openrewrite.yaml.Assertions.yaml;
 
 //class has to stay public, because test is extended in project quarkus-updates
-public class CamelUpdate416Test implements RewriteTest {
+public class CamelUpdate416From3xTest implements RewriteTest {
 
     @Override
     public void defaults(RecipeSpec spec) {
         CamelTestUtil.recipe(spec, CamelTestUtil.CamelVersion.v4_16)
-                .parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v4_15,
-                        "camel-api",
-                        "camel-core-model", "camel-support", "camel-base-engine", "camel-base"))
+                .parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v3_18,
+                        "camel-milo", "stack-server-0.6.8"))
                 .typeValidationOptions(TypeValidation.none());
     }
 
     /**
-     * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_16.html#_camel_flink">camel-flink</a>
+     * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_16.html#_certificate_validation_api_changes">camel-milo API changes</a>
      */
     @Test
-    void flink() {
+    void miloApiChange() {
         //language=java
         rewriteRun(java(
                 """
-                  import org.apache.camel.builder.RouteBuilder;
+                  import org.apache.camel.component.milo.server.MiloServerComponent;
+                  import org.eclipse.milo.opcua.stack.server.security.ServerCertificateValidator;
+                  import org.eclipse.milo.opcua.stack.server.security.DefaultServerCertificateValidator;
                   
-                  public class FlinkTest extends RouteBuilder {
-                      @Override
-                      public void configure()  {
-                          from("direct:start")
-                              .to("flink:dataset?dataSet=#myDataSet&dataSetCallback=#myCallback");
+                  public class MiloTest {
+                      
+                      public void test()  {
+                          MiloServerComponent server = null;
+                          ServerCertificateValidator scv = new DefaultServerCertificateValidator(null);
+                          server.setCertificateValidator(scv);
                       }
                   }
                   """,
                 """
-                  import org.apache.camel.builder.RouteBuilder;
+                  import org.apache.camel.component.milo.server.MiloServerComponent;
+                  import org.eclipse.milo.opcua.stack.core.security.CertificateValidator;
+                  import org.eclipse.milo.opcua.stack.server.security.DefaultServerCertificateValidator;
                   
-                  public class FlinkTest extends RouteBuilder {
-                      @Override
-                      public void configure()  {
-                          from("direct:start")
-                              .to("flink:datastream?dataStream=#myDataStream&dataStreamCallback=#myCallback");
+                  public class MiloTest {
+                      
+                      public void test()  {
+                          MiloServerComponent server = null;
+                          CertificateValidator scv = new DefaultServerCertificateValidator(null);
+                          server.setCertificateValidator(scv);
                       }
                   }
                   """));
     }
-
 
 }

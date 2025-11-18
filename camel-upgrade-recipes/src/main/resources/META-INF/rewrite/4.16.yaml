@@ -28,12 +28,22 @@ name: org.apache.camel.upgrade.camel416.CamelMigrationRecipe
 displayName: Migrates `camel 4.15` application to `camel 4.16`
 description: Migrates `camel 4.15` application to `camel 4.16`.
 recipeList:
-  - org.apache.camel.upgrade.camel416.eips
+  - org.apache.camel.upgrade.camel416.camelMiloCertificate
+#---
+#type: specs.openrewrite.org/v1beta/recipe
+#name: org.apache.camel.upgrade.camel416.eips
+#displayName: Changed types of camel AI nested headers classes
+#description: Changed types of camel AI nested headers classes.
+#recipeList:
+#  - org.openrewrite.java.RemoveMethodInvocations:
+#      methodPattern: "org.apache.camel.model.ValidateDefinition#end()"
 ---
+#https://camel.apache.org/manual/camel-4x-upgrade-guide-4_16.html#_certificate_validation_api_changes
 type: specs.openrewrite.org/v1beta/recipe
-name: org.apache.camel.upgrade.camel416.eips
-displayName: Changed types of camel AI nested headers classes
-description: Changed types of camel AI nested headers classes.
+name: org.apache.camel.upgrade.camel416.camelMiloCertificate
+displayName: Different java type for ServerCertificateValidator in camel-milo
+description: Different java type for ServerCertificateValidator in camel-milo.
 recipeList:
-  - org.openrewrite.java.RemoveMethodInvocations:
-      methodPattern: "org.apache.camel.model.ValidateDefinition#end()"
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.eclipse.milo.opcua.stack.server.security.ServerCertificateValidator
+      newFullyQualifiedTypeName: org.eclipse.milo.opcua.stack.core.security.CertificateValidator
