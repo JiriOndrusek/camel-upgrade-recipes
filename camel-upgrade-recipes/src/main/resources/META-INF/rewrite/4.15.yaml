@@ -28,6 +28,8 @@ name: org.apache.camel.upgrade.camel415.CamelMigrationRecipe
 displayName: Migrates `camel 4.14` application to `camel 4.15`
 description: Migrates `camel 4.14` application to `camel 4.15`.
 recipeList:
+  - org.openrewrite.java.RemoveMethodInvocations:
+        methodPattern: org.apache.camel.model.*#end()
   - org.apache.camel.upgrade.camel415.aiNestedHeadersClasses
   - org.apache.camel.upgrade.camel415.dataFormats
   - org.apache.camel.upgrade.camel415.yamDataFormats
