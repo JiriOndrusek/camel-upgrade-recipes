@@ -32,7 +32,7 @@ public class CamelUpdate416From3xTest implements RewriteTest {
     public void defaults(RecipeSpec spec) {
         CamelTestUtil.recipe(spec, CamelTestUtil.CamelVersion.v4_16)
                 .parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v3_18,
-                        "camel-milo", "stack-server-0.6.8"))
+                        "camel-milo", "stack-server-0.6.8", "stack-client-0.6.8", "stack-core-0.6.8", "sdk-client-0.6.8"))
                 .typeValidationOptions(TypeValidation.none());
     }
 
@@ -72,5 +72,43 @@ public class CamelUpdate416From3xTest implements RewriteTest {
                   }
                   """));
     }
+
+    /**
+     * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_16.html#_certificate_validation_api_changes">camel-milo API changes</a>
+     * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_16.html#_subscription_monitoring_api_changes">camel-milo subscription monitoring API changes</a>
+     */
+    @Test
+    void miloApiChange2() {
+        //language=java
+        rewriteRun(java(
+                """
+                  import org.apache.camel.component.milo.server.MiloServerComponent;
+                  import org.eclipse.milo.opcua.sdk.client.subscriptions.OpcUaMonitoredItem;
+                  import org.eclipse.milo.opcua.stack.server.security.ServerCertificateValidator;
+                  
+                  
+                  public class MiloTest {
+                      
+                      public void test()  {
+                          OpcUaMonitoredItem item = null;
+                          item.setValueConsumer(dataValue -> {});
+                      }
+                  }
+                  """,
+                """
+                  import org.apache.camel.component.milo.server.MiloServerComponent;
+                  import org.eclipse.milo.opcua.stack.core.security.CertificateValidator;
+                  import org.eclipse.milo.opcua.sdk.client.subscriptions.OpcUaMonitoredItem;
+                  
+                  public class MiloTest {
+                      
+                      public void test()  {
+                          OpcUaMonitoredItem item = null;
+                          item.setDataValueListener((item, dataValue) -> {};
+                      }
+                  }
+                  """));
+    }
+
 
 }

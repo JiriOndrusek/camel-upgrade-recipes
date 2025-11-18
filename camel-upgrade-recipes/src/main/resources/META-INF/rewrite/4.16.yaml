@@ -28,6 +28,7 @@ name: org.apache.camel.upgrade.camel416.CamelMigrationRecipe
 displayName: Migrates `camel 4.15` application to `camel 4.16`
 description: Migrates `camel 4.15` application to `camel 4.16`.
 recipeList:
+  - org.apache.camel.upgrade.camel415.Camel415MiloLambdaRecipe
   - org.apache.camel.upgrade.camel416.camelMiloCertificate
 #---
 #type: specs.openrewrite.org/v1beta/recipe
