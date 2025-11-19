@@ -22,8 +22,6 @@ import org.openrewrite.test.RewriteTest;
 import org.openrewrite.test.TypeValidation;
 
 import static org.openrewrite.java.Assertions.java;
-import static org.openrewrite.xml.Assertions.xml;
-import static org.openrewrite.yaml.Assertions.yaml;
 
 //class has to stay public, because test is extended in project quarkus-updates
 public class CamelUpdate416From3xTest implements RewriteTest {
@@ -49,7 +47,7 @@ public class CamelUpdate416From3xTest implements RewriteTest {
                   import org.eclipse.milo.opcua.stack.server.security.DefaultServerCertificateValidator;
                   
                   public class MiloTest {
-                      
+                  
                       public void test()  {
                           MiloServerComponent server = null;
                           ServerCertificateValidator scv = new DefaultServerCertificateValidator(null);
@@ -63,7 +61,7 @@ public class CamelUpdate416From3xTest implements RewriteTest {
                   import org.eclipse.milo.opcua.stack.server.security.DefaultServerCertificateValidator;
                   
                   public class MiloTest {
-                      
+                  
                       public void test()  {
                           MiloServerComponent server = null;
                           CertificateValidator scv = new DefaultServerCertificateValidator(null);
@@ -74,37 +72,33 @@ public class CamelUpdate416From3xTest implements RewriteTest {
     }
 
     /**
-     * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_16.html#_certificate_validation_api_changes">camel-milo API changes</a>
      * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_16.html#_subscription_monitoring_api_changes">camel-milo subscription monitoring API changes</a>
      */
     @Test
-    void miloApiChange2() {
+    void miloSubscriptionMonitoringApiChanges() {
         //language=java
         rewriteRun(java(
                 """
                   import org.apache.camel.component.milo.server.MiloServerComponent;
                   import org.eclipse.milo.opcua.sdk.client.subscriptions.OpcUaMonitoredItem;
-                  import org.eclipse.milo.opcua.stack.server.security.ServerCertificateValidator;
-                  
                   
                   public class MiloTest {
-                      
+                  
                       public void test()  {
                           OpcUaMonitoredItem item = null;
-                          item.setValueConsumer(dataValue -> {});
+                          item.setValueConsumer(dataValue -> {int i = 0;});
                       }
                   }
                   """,
                 """
                   import org.apache.camel.component.milo.server.MiloServerComponent;
-                  import org.eclipse.milo.opcua.stack.core.security.CertificateValidator;
                   import org.eclipse.milo.opcua.sdk.client.subscriptions.OpcUaMonitoredItem;
                   
                   public class MiloTest {
-                      
+                  
                       public void test()  {
                           OpcUaMonitoredItem item = null;
-                          item.setDataValueListener((item, dataValue) -> {};
+                          item.setDataValueListener((item,dataValue) -> {int i = 0;});
                       }
                   }
                   """));

@@ -158,6 +158,7 @@ public class RecipesUtil {
                 UUID.randomUUID(), Space.EMPTY, Markers.EMPTY, value, "\"" + value + "\"", null, JavaType.Primitive.String);
     }
 
+
     private static <T> JRightPadded<T> padRight(T tree) {
         return new JRightPadded<>(tree, Space.EMPTY, Markers.EMPTY);
     }
