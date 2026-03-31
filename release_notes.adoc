@@ -1,5 +1,27 @@
 = Camel Upgrade Recipes - Release notes
 
+== 4.19.0
+
+=== Summary
+
+This is a release supporting Camel, Camel Quarkus and Camel Spring Boot 4.19.0 with the required upgrade recipes (described by the https://camel.apache.org/manual/camel-4x-upgrade-guide-4_19.html[migration guide]).
+
+=== Migration coverage
+
+The following table lists migration topics and indicates the level of coverage (full, partial, or not covered), along with additional comments.
+
+[%autowidth,stripes=hover]
+|===
+| Migration | Coverage | Comment
+| https://camel.apache.org/manual/camel-4x-upgrade-guide-4_19.html#_camel_groovy_xml[camel-groovy-xml] | ✅ Full | Dependency automatically migrated from camel-groovy-xml to camel-groovy. For Spring Boot, camel-groovy-xml-starter is migrated to camel-groovy-starter.
+| https://camel.apache.org/manual/camel-4x-upgrade-guide-4_19.html#_junit[JUnit 5 to JUnit 6] | ✅ Full | All Camel test dependencies and packages automatically migrated from junit5 to junit6. JUnit dependencies upgraded to 6.0.3.
+| https://camel.apache.org/manual/camel-4x-upgrade-guide-4_19.html#_spring_boot[Spring Boot 3 to 4] | ⚠️ Partial | Spring Boot dependencies automatically upgraded to version 4.x. Manual code changes may be required based on Spring Boot 4.0 migration guide.
+| https://camel.apache.org/manual/camel-4x-upgrade-guide-4_19.html#_spring_framework[Spring Framework 6 to 7] | ⚠️ Partial | Spring Framework dependencies automatically upgraded to version 7.x. Manual code changes may be required for deprecated APIs.
+| https://camel.apache.org/manual/camel-4x-upgrade-guide-4_19.html#_spring_security[Spring Security 6 to 7] | ⚠️ Partial | Spring Security dependencies automatically upgraded to version 7.x. Manual code changes may be required for security configuration changes.
+| https://camel.apache.org/manual/camel-4x-upgrade-guide-4_19.html#_spring_batch[Spring Batch 5 to 6] | ⚠️ Partial | Spring Batch dependencies automatically upgraded to version 6.x. Manual code changes may be required for batch job configurations.
+| https://camel.apache.org/manual/camel-4x-upgrade-guide-4_19.html#_mdc_older_logic_deprecation[MDC logging deprecation] | ⚠️ Partial | Deprecated camel.main.useMdcLogging property is automatically removed. If MDC logging was used, manually add the camel-mdc-starter dependency.
+|===
+
 == 4.18.0
 
 === Summary

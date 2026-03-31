@@ -14,29 +14,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+#####
+# Rules coming from https://camel.apache.org/manual/camel-4x-upgrade-guide-4_19.html
+#####
+
+#####
+# Update the Camel project from 4.18 to 4.19
+#####
 ---
 type: specs.openrewrite.org/v1beta/recipe
-name: org.apache.camel.upgrade.CamelMigrationRecipe
-displayName: Migrate to @camel-latest-version@
-description: Migrates Apache Camel application to @camel-latest-version@.
+name: org.apache.camel.upgrade.camel419.CamelMigrationRecipe
+displayName: Migrates `camel 4.18` application to `camel 4.19`
+description: Migrates `camel 4.18` application to `camel 4.19`.
 recipeList:
-  - org.apache.camel.upgrade.camel419.CamelMigrationRecipe
-  - org.apache.camel.upgrade.camel418.CamelMigrationRecipe
-  - org.apache.camel.upgrade.camel417.CamelMigrationRecipe
-  - org.apache.camel.upgrade.camel416.CamelMigrationRecipe
-  - org.apache.camel.upgrade.camel415.CamelMigrationRecipe
-  - org.apache.camel.upgrade.camel414.CamelMigrationRecipe
-  - org.apache.camel.upgrade.camel413.CamelMigrationRecipe
-  - org.apache.camel.upgrade.camel412.CamelMigrationRecipe
-  - org.apache.camel.upgrade.camel411.CamelMigrationRecipe
-  - org.apache.camel.upgrade.camel410.CamelMigrationRecipe
-  - org.apache.camel.upgrade.camel49.CamelMigrationRecipe
-  - org.apache.camel.upgrade.camel47.CamelMigrationRecipe
-  - org.apache.camel.upgrade.camel46.CamelMigrationRecipe
-  - org.apache.camel.upgrade.camel45.CamelMigrationRecipe
-  - org.apache.camel.upgrade.camel44.CamelMigrationRecipe
-  - org.apache.camel.upgrade.camel40.CamelMigrationRecipe
-  - org.apache.camel.upgrade.UpdatePropertiesAndYamlKeys
+  # Run artifact migrations FIRST (while still at old version)
+  - org.apache.camel.upgrade.camel419.migrateGroovyXml
+  # Then upgrade Camel dependencies to 4.19.0-SNAPSHOT
   - org.openrewrite.maven.UpgradeDependencyVersion:
       groupId: 'org.apache.camel'
       artifactId: '*'
@@ -52,3 +46,16 @@ recipeList:
   - org.openrewrite.maven.ChangePropertyValue:
       key: camel.version
       newValue: @camel-latest-version@
+---
+# https://camel.apache.org/manual/camel-4x-upgrade-guide-4_19.html#_camel_groovy_xml
+# Migrate camel-groovy-xml to camel-groovy
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.camel419.migrateGroovyXml
+displayName: Migrate camel-groovy-xml to camel-groovy
+description: camel-groovy-xml has been removed and moved into camel-groovy. Changes the dependency from camel-groovy-xml to camel-groovy.
+recipeList:
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: org.apache.camel
+      oldArtifactId: camel-groovy-xml
+      newGroupId: org.apache.camel
+      newArtifactId: camel-groovy
