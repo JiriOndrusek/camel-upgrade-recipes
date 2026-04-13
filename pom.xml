@@ -113,6 +113,7 @@
 
         <!-- versions for OpenRewrite dependencies -->
         <tahu-version>1.0.18</tahu-version>
+        <jspecify-version>1.0.0</jspecify-version>
 
         <!-- versions for camel-spring-boot -->
         <spring-boot-version>4.0.4</spring-boot-version>

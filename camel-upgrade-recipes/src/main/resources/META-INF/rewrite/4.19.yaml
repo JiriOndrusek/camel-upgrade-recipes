@@ -30,6 +30,14 @@ description: Migrates `camel 4.18` application to `camel 4.19`.
 recipeList:
   # Run artifact migrations FIRST (while still at old version)
   - org.apache.camel.upgrade.camel419.migrateGroovyXml
+  # POM migrations (before version upgrade)
+  - org.apache.camel.upgrade.camel419.Pom419TestInfraRecipe
+  # DSL migrations (before dependency upgrade)
+  - org.apache.camel.upgrade.camel419.XmlDsl419WireTapRecipe
+  - org.apache.camel.upgrade.camel419.YamlDsl419WireTapRecipe
+  - org.apache.camel.upgrade.camel419.XmlDsl419SagaRecipe
+  - org.apache.camel.upgrade.camel419.YamlDsl419SagaRecipe
+  - org.apache.camel.upgrade.camel419.YamlDsl419RoutePolicyRecipe
   # Then upgrade Camel dependencies to 4.19.0-SNAPSHOT
   - org.openrewrite.maven.UpgradeDependencyVersion:
       groupId: 'org.apache.camel'
