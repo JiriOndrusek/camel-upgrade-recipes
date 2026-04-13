@@ -29,6 +29,12 @@ displayName: Migrates `camel 4.18` application to `camel 4.19`
 description: Migrates `camel 4.18` application to `camel 4.19`.
 recipeList:
   - org.apache.camel.upgrade.camel419.migrateGroovyXml
+  - org.apache.camel.upgrade.camel419.Pom419TestInfraRecipe
+  - org.apache.camel.upgrade.camel419.XmlDsl419WireTapRecipe
+  - org.apache.camel.upgrade.camel419.YamlDsl419WireTapRecipe
+  - org.apache.camel.upgrade.camel419.XmlDsl419SagaRecipe
+  - org.apache.camel.upgrade.camel419.YamlDsl419SagaRecipe
+  - org.apache.camel.upgrade.camel419.YamlDsl419RoutePolicyRecipe
 ---
 # https://camel.apache.org/manual/camel-4x-upgrade-guide-4_19.html#_camel_groovy_xml
 # Migrate camel-groovy-xml to camel-groovy
