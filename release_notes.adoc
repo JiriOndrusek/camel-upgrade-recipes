@@ -1,5 +1,24 @@
 = Camel Upgrade Recipes - Release notes
 
+== 4.20.0
+
+=== Summary
+
+This is a release supporting Camel, Camel Quarkus and Camel Spring Boot 4.20.0 with the required upgrade recipes (described by the https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html[migration guide]).
+
+=== Migration coverage
+
+The following table lists migration topics and indicates the level of coverage (full, partial, or not covered), along with additional comments.
+
+[%autowidth,stripes=hover]
+|===
+| Migration | Coverage | Comment
+| https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_jbang[camel-jbang] | ❌ None | YAML DSL file naming convention change. Manual review required.
+| https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_exec[camel-exec] | ❌ None | Security change requiring explicit opt-in via `allowControlHeaders=true`. Manual configuration required.
+| https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_pulsar[camel-pulsar] | ✅ Full | V1 to V2 topic URI format automatically migrated. Removes cluster segment and replaces forward slashes with hyphens.
+| https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_oaipmh[camel-oaipmh] | ❌ None | New HTTP header parameter functionality. No migration needed.
+|===
+
 == 4.19.0
 
 === Summary
