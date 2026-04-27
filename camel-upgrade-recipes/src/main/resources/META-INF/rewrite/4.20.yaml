@@ -28,4 +28,19 @@ name: org.apache.camel.upgrade.camel420.CamelMigrationRecipe
 displayName: Migrates `camel 4.19` application to `camel 4.20`
 description: Migrates `camel 4.19` application to `camel 4.20`.
 recipeList:
-  - org.apache.camel.upgrade.camel420.Pulsar420Recipe
+  - org.apache.camel.upgrade.camel420.migratePulsarUris
+---
+# https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_pulsar
+# Migrate Pulsar URIs from V1 to V2 format (removes cluster segment)
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.camel420.migratePulsarUris
+displayName: Migrate Pulsar component URIs from V1 to V2 format
+description: |
+  Apache Pulsar client upgraded from 4.1.3 to 4.2.0. Per PIP-457, V1 topic names are no longer supported.
+  Migrates from V1 format (persistent://tenant/cluster/namespace/topic) to V2 format (persistent://tenant/namespace/topic).
+  Removes the cluster segment and replaces forward slashes in topic names with hyphens.
+  Works across Java, XML DSL, and YAML DSL.
+recipeList:
+  - org.apache.camel.upgrade.customRecipes.ChangeComponentUriRecipe:
+      uriPattern: "^pulsar:((persistent|non-persistent)://([^/]+)/([^/]+)/([^/]+)/(.+))$"
+      replacement: "pulsar:${2}://${3}/${5}/${6}"

@@ -16,7 +16,6 @@
  */
 package org.apache.camel.upgrade;
 
-import org.apache.camel.upgrade.camel420.*;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.java.JavaParser;
 import org.openrewrite.test.RecipeSpec;
@@ -24,6 +23,8 @@ import org.openrewrite.test.RewriteTest;
 import org.openrewrite.test.TypeValidation;
 
 import static org.openrewrite.java.Assertions.java;
+import static org.openrewrite.xml.Assertions.xml;
+import static org.openrewrite.yaml.Assertions.yaml;
 
 public class CamelUpdate420Test implements RewriteTest {
 
@@ -228,6 +229,106 @@ public class CamelUpdate420Test implements RewriteTest {
                             .to("mock:result");
                     }
                 }
+                """));
+    }
+
+    /**
+     * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_pulsar">camel-pulsar</a>
+     * XML DSL test
+     */
+    @Test
+    void pulsarXmlDsl() {
+        //language=xml
+        rewriteRun(xml(
+                """
+                <routes xmlns="http://camel.apache.org/schema/spring">
+                    <route id="pulsarRoute">
+                        <from uri="pulsar:persistent://public/cluster1/default/my-topic"/>
+                        <to uri="pulsar:non-persistent://tenant/cluster2/ns/topic1?subscriptionName=sub1"/>
+                        <to uri="mock:result"/>
+                    </route>
+                </routes>
+                """,
+                """
+                <routes xmlns="http://camel.apache.org/schema/spring">
+                    <route id="pulsarRoute">
+                        <from uri="pulsar:persistent://public/default/my-topic"/>
+                        <to uri="pulsar:non-persistent://tenant/ns/topic1?subscriptionName=sub1"/>
+                        <to uri="mock:result"/>
+                    </route>
+                </routes>
+                """));
+    }
+
+    /**
+     * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_pulsar">camel-pulsar</a>
+     * YAML DSL test
+     */
+    @Test
+    void pulsarYamlDsl() {
+        //language=yaml
+        rewriteRun(yaml(
+                """
+                - route:
+                    id: pulsarRoute
+                    from:
+                      uri: pulsar:persistent://public/cluster1/default/my-topic
+                      steps:
+                        - to:
+                            uri: pulsar:non-persistent://tenant/cluster2/ns/topic1?subscriptionName=sub1
+                        - to:
+                            uri: mock:result
+                """,
+                """
+                - route:
+                    id: pulsarRoute
+                    from:
+                      uri: pulsar:persistent://public/default/my-topic
+                      steps:
+                        - to:
+                            uri: pulsar:non-persistent://tenant/ns/topic1?subscriptionName=sub1
+                        - to:
+                            uri: mock:result
+                """));
+    }
+
+    /**
+     * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_pulsar">camel-pulsar</a>
+     * YAML DSL with topic containing slashes
+     */
+    @Test
+    void pulsarYamlDslWithSlashesInTopic() {
+        //language=yaml
+        rewriteRun(yaml(
+                """
+                - route:
+                    from:
+                      uri: pulsar:persistent://tenant/cluster/namespace/topic/with/slashes
+                """,
+                """
+                - route:
+                    from:
+                      uri: pulsar:persistent://tenant/namespace/topic-with-slashes
+                """));
+    }
+
+    /**
+     * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_pulsar">camel-pulsar</a>
+     * XML DSL with topic containing slashes
+     */
+    @Test
+    void pulsarXmlDslWithSlashesInTopic() {
+        //language=xml
+        rewriteRun(xml(
+                """
+                <route>
+                    <from uri="pulsar:persistent://tenant/cluster/namespace/topic/with/slashes?param=value"/>
+                </route>
+                """,
+                """
+                <route>
+                    <from uri="pulsar:persistent://tenant/namespace/topic-with-slashes?param=value"/>
+                </route>
                 """));
     }
 }
