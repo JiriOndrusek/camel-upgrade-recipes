@@ -37,298 +37,159 @@ public class CamelUpdate420Test implements RewriteTest {
 
     /**
      * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_pulsar">camel-pulsar</a>
+     * Tests all Java DSL transformations
      */
     @Test
-    void pulsarPersistentV1toV2() {
+    void pulsarJavaDsl() {
         //language=java
-        rewriteRun(java(
-                """
-                import org.apache.camel.builder.RouteBuilder;
+        rewriteRun(
+                // V1 persistent to V2
+                java(
+                        """
+                        import org.apache.camel.builder.RouteBuilder;
 
-                public class MyRoute extends RouteBuilder {
-                    @Override
-                    public void configure() {
-                        from("pulsar:persistent://public/cluster1/default/my-topic")
-                            .to("mock:result");
-                    }
-                }
-                """,
-                """
-                import org.apache.camel.builder.RouteBuilder;
+                        public class MyRoute extends RouteBuilder {
+                            @Override
+                            public void configure() {
+                                // V1 persistent to V2
+                                from("pulsar:persistent://public/cluster1/default/my-topic")
+                                    .to("mock:result");
+                                // V1 non-persistent to V2
+                                from("pulsar:non-persistent://tenant1/cluster2/namespace1/topic1")
+                                    .to("mock:result");
+                                // With query parameters
+                                from("pulsar:persistent://public/cluster1/default/my-topic?numberOfConsumers=5&subscriptionType=Shared")
+                                    .to("mock:result");
+                                // Topic with slashes replaced by hyphens
+                                from("pulsar:persistent://public/cluster1/default/my-topic/sub-path")
+                                    .to("mock:result");
+                                // Topic with slashes and query parameters
+                                from("pulsar:persistent://tenant/cluster/ns/topic/path/more?subscriptionName=sub1")
+                                    .to("mock:result");
+                                // format unchanged
+                                from("pulsar:persistent://public/default/my-topic")
+                                    .to("mock:result");
+                                from("other-component:my-topic")
+                                    .to("mock:result");
+                            }
+                        }
+                        """,
+                        """
+                        import org.apache.camel.builder.RouteBuilder;
 
-                public class MyRoute extends RouteBuilder {
-                    @Override
-                    public void configure() {
-                        from("pulsar:persistent://public/default/my-topic")
-                            .to("mock:result");
-                    }
-                }
-                """));
+                        public class MyRoute extends RouteBuilder {
+                            @Override
+                            public void configure() {
+                                // V1 persistent to V2
+                                from("pulsar:persistent://public/default/my-topic")
+                                    .to("mock:result");
+                                // V1 non-persistent to V2
+                                from("pulsar:non-persistent://tenant1/namespace1/topic1")
+                                    .to("mock:result");
+                                // With query parameters
+                                from("pulsar:persistent://public/default/my-topic?numberOfConsumers=5&subscriptionType=Shared")
+                                    .to("mock:result");
+                                // Topic with slashes replaced by hyphens
+                                from("pulsar:persistent://public/default/my-topic-sub-path")
+                                    .to("mock:result");
+                                // Topic with slashes and query parameters
+                                from("pulsar:persistent://tenant/ns/topic-path-more?subscriptionName=sub1")
+                                    .to("mock:result");
+                                // format unchanged
+                                from("pulsar:persistent://public/default/my-topic")
+                                    .to("mock:result");
+                                from("other-component:my-topic")
+                                    .to("mock:result");
+                            }
+                        }
+                        """)
+        );
     }
 
     /**
      * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_pulsar">camel-pulsar</a>
-     */
-    @Test
-    void pulsarNonPersistentV1toV2() {
-        //language=java
-        rewriteRun(java(
-                """
-                import org.apache.camel.builder.RouteBuilder;
-
-                public class MyRoute extends RouteBuilder {
-                    @Override
-                    public void configure() {
-                        from("pulsar:non-persistent://tenant1/cluster2/namespace1/topic1")
-                            .to("mock:result");
-                    }
-                }
-                """,
-                """
-                import org.apache.camel.builder.RouteBuilder;
-
-                public class MyRoute extends RouteBuilder {
-                    @Override
-                    public void configure() {
-                        from("pulsar:non-persistent://tenant1/namespace1/topic1")
-                            .to("mock:result");
-                    }
-                }
-                """));
-    }
-
-    /**
-     * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_pulsar">camel-pulsar</a>
-     */
-    @Test
-    void pulsarWithQueryParameters() {
-        //language=java
-        rewriteRun(java(
-                """
-                import org.apache.camel.builder.RouteBuilder;
-
-                public class MyRoute extends RouteBuilder {
-                    @Override
-                    public void configure() {
-                        from("pulsar:persistent://public/cluster1/default/my-topic?numberOfConsumers=5&subscriptionType=Shared")
-                            .to("mock:result");
-                    }
-                }
-                """,
-                """
-                import org.apache.camel.builder.RouteBuilder;
-
-                public class MyRoute extends RouteBuilder {
-                    @Override
-                    public void configure() {
-                        from("pulsar:persistent://public/default/my-topic?numberOfConsumers=5&subscriptionType=Shared")
-                            .to("mock:result");
-                    }
-                }
-                """));
-    }
-
-    /**
-     * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_pulsar">camel-pulsar</a>
-     */
-    @Test
-    void pulsarTopicWithSlashesReplacedByHyphens() {
-        //language=java
-        rewriteRun(java(
-                """
-                import org.apache.camel.builder.RouteBuilder;
-
-                public class MyRoute extends RouteBuilder {
-                    @Override
-                    public void configure() {
-                        from("pulsar:persistent://public/cluster1/default/my-topic/sub-path")
-                            .to("mock:result");
-                    }
-                }
-                """,
-                """
-                import org.apache.camel.builder.RouteBuilder;
-
-                public class MyRoute extends RouteBuilder {
-                    @Override
-                    public void configure() {
-                        from("pulsar:persistent://public/default/my-topic-sub-path")
-                            .to("mock:result");
-                    }
-                }
-                """));
-    }
-
-    /**
-     * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_pulsar">camel-pulsar</a>
-     */
-    @Test
-    void pulsarTopicWithSlashesAndQueryParameters() {
-        //language=java
-        rewriteRun(java(
-                """
-                import org.apache.camel.builder.RouteBuilder;
-
-                public class MyRoute extends RouteBuilder {
-                    @Override
-                    public void configure() {
-                        from("pulsar:persistent://tenant/cluster/ns/topic/path/more?subscriptionName=sub1")
-                            .to("mock:result");
-                    }
-                }
-                """,
-                """
-                import org.apache.camel.builder.RouteBuilder;
-
-                public class MyRoute extends RouteBuilder {
-                    @Override
-                    public void configure() {
-                        from("pulsar:persistent://tenant/ns/topic-path-more?subscriptionName=sub1")
-                            .to("mock:result");
-                    }
-                }
-                """));
-    }
-
-    /**
-     * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_pulsar">camel-pulsar</a>
-     * V2 format (3 segments) should not be changed
-     */
-    @Test
-    void pulsarV2FormatUnchanged() {
-        //language=java
-        rewriteRun(java(
-                """
-                import org.apache.camel.builder.RouteBuilder;
-
-                public class MyRoute extends RouteBuilder {
-                    @Override
-                    public void configure() {
-                        from("pulsar:persistent://public/default/my-topic")
-                            .to("mock:result");
-                    }
-                }
-                """));
-    }
-
-    /**
-     * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_pulsar">camel-pulsar</a>
-     * Non-pulsar URIs should not be changed
-     */
-    @Test
-    void nonPulsarUriUnchanged() {
-        //language=java
-        rewriteRun(java(
-                """
-                import org.apache.camel.builder.RouteBuilder;
-
-                public class MyRoute extends RouteBuilder {
-                    @Override
-                    public void configure() {
-                        from("kafka:my-topic")
-                            .to("mock:result");
-                    }
-                }
-                """));
-    }
-
-    /**
-     * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_pulsar">camel-pulsar</a>
-     * XML DSL test
+     * Tests all XML DSL transformations
      */
     @Test
     void pulsarXmlDsl() {
         //language=xml
-        rewriteRun(xml(
-                """
-                <routes xmlns="http://camel.apache.org/schema/spring">
-                    <route id="pulsarRoute">
-                        <from uri="pulsar:persistent://public/cluster1/default/my-topic"/>
-                        <to uri="pulsar:non-persistent://tenant/cluster2/ns/topic1?subscriptionName=sub1"/>
-                        <to uri="mock:result"/>
-                    </route>
-                </routes>
-                """,
-                """
-                <routes xmlns="http://camel.apache.org/schema/spring">
-                    <route id="pulsarRoute">
-                        <from uri="pulsar:persistent://public/default/my-topic"/>
-                        <to uri="pulsar:non-persistent://tenant/ns/topic1?subscriptionName=sub1"/>
-                        <to uri="mock:result"/>
-                    </route>
-                </routes>
-                """));
+        rewriteRun(
+                xml(
+                        """
+                        <routes xmlns="http://camel.apache.org/schema/spring">
+                            <!-- Basic transformation with from and to -->
+                            <route id="pulsarRoute">
+                                <from uri="pulsar:persistent://public/cluster1/default/my-topic"/>
+                                <to uri="pulsar:non-persistent://tenant/cluster2/ns/topic1?subscriptionName=sub1"/>
+                                <to uri="mock:result"/>
+                            </route>
+                            <!-- Topic with slashes and query parameters -->
+                            <route>
+                                <from uri="pulsar:persistent://tenant/cluster/namespace/topic/with/slashes?param=value"/>
+                            </route>
+                        </routes>
+                        """,
+                        """
+                        <routes xmlns="http://camel.apache.org/schema/spring">
+                            <!-- Basic transformation with from and to -->
+                            <route id="pulsarRoute">
+                                <from uri="pulsar:persistent://public/default/my-topic"/>
+                                <to uri="pulsar:non-persistent://tenant/ns/topic1?subscriptionName=sub1"/>
+                                <to uri="mock:result"/>
+                            </route>
+                            <!-- Topic with slashes and query parameters -->
+                            <route>
+                                <from uri="pulsar:persistent://tenant/namespace/topic-with-slashes?param=value"/>
+                            </route>
+                        </routes>
+                        """)
+        );
     }
 
     /**
      * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_pulsar">camel-pulsar</a>
-     * YAML DSL test
+     * Tests all YAML DSL transformations
      */
     @Test
     void pulsarYamlDsl() {
         //language=yaml
-        rewriteRun(yaml(
-                """
-                - route:
-                    id: pulsarRoute
-                    from:
-                      uri: pulsar:persistent://public/cluster1/default/my-topic
-                      steps:
-                        - to:
-                            uri: pulsar:non-persistent://tenant/cluster2/ns/topic1?subscriptionName=sub1
-                        - to:
-                            uri: mock:result
-                """,
-                """
-                - route:
-                    id: pulsarRoute
-                    from:
-                      uri: pulsar:persistent://public/default/my-topic
-                      steps:
-                        - to:
-                            uri: pulsar:non-persistent://tenant/ns/topic1?subscriptionName=sub1
-                        - to:
-                            uri: mock:result
-                """));
-    }
-
-    /**
-     * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_pulsar">camel-pulsar</a>
-     * YAML DSL with topic containing slashes
-     */
-    @Test
-    void pulsarYamlDslWithSlashesInTopic() {
-        //language=yaml
-        rewriteRun(yaml(
-                """
-                - route:
-                    from:
-                      uri: pulsar:persistent://tenant/cluster/namespace/topic/with/slashes
-                """,
-                """
-                - route:
-                    from:
-                      uri: pulsar:persistent://tenant/namespace/topic-with-slashes
-                """));
-    }
-
-    /**
-     * <a href="https://camel.apache.org/manual/camel-4x-upgrade-guide-4_20.html#_camel_pulsar">camel-pulsar</a>
-     * XML DSL with topic containing slashes
-     */
-    @Test
-    void pulsarXmlDslWithSlashesInTopic() {
-        //language=xml
-        rewriteRun(xml(
-                """
-                <route>
-                    <from uri="pulsar:persistent://tenant/cluster/namespace/topic/with/slashes?param=value"/>
-                </route>
-                """,
-                """
-                <route>
-                    <from uri="pulsar:persistent://tenant/namespace/topic-with-slashes?param=value"/>
-                </route>
-                """));
+        rewriteRun(
+                // Basic transformation with from and to
+                yaml(
+                        """
+                        - route:
+                            id: pulsarRoute
+                            from:
+                              uri: pulsar:persistent://public/cluster1/default/my-topic
+                              steps:
+                                - to:
+                                    uri: pulsar:non-persistent://tenant/cluster2/ns/topic1?subscriptionName=sub1
+                                - to:
+                                    uri: mock:result
+                        """,
+                        """
+                        - route:
+                            id: pulsarRoute
+                            from:
+                              uri: pulsar:persistent://public/default/my-topic
+                              steps:
+                                - to:
+                                    uri: pulsar:non-persistent://tenant/ns/topic1?subscriptionName=sub1
+                                - to:
+                                    uri: mock:result
+                        """),
+                // Topic with slashes
+                yaml(
+                        """
+                        - route:
+                            from:
+                              uri: pulsar:persistent://tenant/cluster/namespace/topic/with/slashes
+                        """,
+                        """
+                        - route:
+                            from:
+                              uri: pulsar:persistent://tenant/namespace/topic-with-slashes
+                        """)
+        );
     }
 }
