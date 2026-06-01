@@ -28,14 +28,22 @@ name: org.apache.camel.upgrade.camel421.CamelMigrationRecipe
 displayName: Migrates `camel 4.20` application to `camel 4.21`
 description: Migrates `camel 4.20` application to `camel 4.21`.
 recipeList:
-  # Recipes will be added here as they are implemented
-
-  #####
-  # Kafka Headers - Partial Migration (safe contexts only)
-  # Migrates all 12 Kafka headers across all DSL types: Java (.setHeader, .getHeader),
-  # Simple expressions (${header.name}), XML DSL, and YAML DSL
-  # Does NOT migrate: dynamic header names, Map.get() calls, arbitrary strings
-  #####
+  - org.apache.camel.upgrade.camel421.upgradeKafkaRecipes
+  - org.apache.camel.upgrade.camel421.upgradeJGroupsHeaders
+  - org.apache.camel.upgrade.camel421.upgradeDnsHeaders
+  - org.apache.camel.upgrade.camel421.upgradeJiraHeaders
+  - org.apache.camel.upgrade.camel421.upgradeLuceneHeaders
+  - org.apache.camel.upgrade.camel421.upgradeCouchdbHeaders
+  - org.apache.camel.upgrade.camel421.upgradeCouchbaseHeaders
+  - org.apache.camel.upgrade.camel421.upgradeJGroupsRaftHeaders
+  - org.apache.camel.upgrade.camel421.upgradeShiroHeaders
+---
+## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#camel-kafka---potential-breaking-change
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.camel421.upgradeKafkaRecipes
+displayName: The camel-test module has been removed from camel-bom
+description: The camel-test module has been removed from camel-bom.
+recipeList:
   - org.apache.camel.upgrade.camel421.RenameHeaders:
       headerMappings:
         kafka.PARTITION_KEY: CamelKafkaPartitionKey
@@ -50,3 +58,132 @@ recipeList:
         kafka.TIMESTAMP: CamelKafkaTimestamp
         kafka.OVERRIDE_TIMESTAMP: CamelKafkaOverrideTimestamp
         kafka.RECORD_META: CamelKafkaRecordMeta
+---
+## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#camel-jgroups-potential-breaking-change
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.camel421.upgradeJGroupsHeaders
+displayName: Migrate camel-jgroups header constants to new naming convention
+description: Renames JGroups header constants from JGROUPS_* to CamelJGroups* pattern.
+recipeList:
+  - org.apache.camel.upgrade.camel421.RenameHeaders:
+      headerMappings:
+        JGROUPS_CHANNEL_ADDRESS: CamelJGroupsChannelAddress
+        JGROUPS_DEST: CamelJGroupsDest
+        JGROUPS_SRC: CamelJGroupsSrc
+        JGROUPS_ORIGINAL_MESSAGE: CamelJGroupsOriginalMessage
+---
+## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#camel-dns-potential-breaking-change
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.camel421.upgradeDnsHeaders
+displayName: Migrate camel-dns header constants to new naming convention
+description: Renames DNS header constants from dns.* pattern to CamelDns* pattern.
+recipeList:
+  - org.apache.camel.upgrade.camel421.RenameHeaders:
+      headerMappings:
+        dns.class: CamelDnsClass
+        dns.name: CamelDnsName
+        dns.domain: CamelDnsDomain
+        dns.server: CamelDnsServer
+        dns.type: CamelDnsType
+        term: CamelDnsTerm
+---
+## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#camel-jira-potential-breaking-change
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.camel421.upgradeJiraHeaders
+displayName: Migrate camel-jira header constants to new naming convention
+description: Renames JIRA header constants to CamelJira* pattern.
+recipeList:
+  - org.apache.camel.upgrade.camel421.RenameHeaders:
+      headerMappings:
+        IssueAssigneeId: CamelJiraIssueAssigneeId
+        IssueAssignee: CamelJiraIssueAssignee
+        IssueComponents: CamelJiraIssueComponents
+        IssueComment: CamelJiraIssueComment
+        IssueChanged: CamelJiraIssueChanged
+        IssueKey: CamelJiraIssueKey
+        IssuePriorityId: CamelJiraIssuePriorityId
+        IssuePriorityName: CamelJiraIssuePriorityName
+        ProjectKey: CamelJiraIssueProjectKey
+        IssueSummary: CamelJiraIssueSummary
+        IssueTransitionId: CamelJiraIssueTransitionId
+        IssueTypeId: CamelJiraIssueTypeId
+        IssueTypeName: CamelJiraIssueTypeName
+        IssueWatchedIssues: CamelJiraIssueWatchedIssues
+        IssueWatchersAdd: CamelJiraIssueWatchersAdd
+        IssueWatchersRemove: CamelJiraIssueWatchersRemove
+        ParentIssueKey: CamelJiraParentIssueKey
+        ChildIssueKey: CamelJiraChildIssueKey
+        linkType: CamelJiraLinkType
+        minutesSpent: CamelJiraMinutesSpent
+---
+## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#camel-lucene
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.camel421.upgradeLuceneHeaders
+displayName: Migrate camel-lucene header constants to new naming convention
+description: Renames Lucene header constants to CamelLucene* pattern.
+recipeList:
+  - org.apache.camel.upgrade.camel421.RenameHeaders:
+      headerMappings:
+        QUERY: CamelLuceneQuery
+        RETURN_LUCENE_DOCS: CamelLuceneReturnLuceneDocs
+---
+## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#camel-couchdb
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.camel421.upgradeCouchdbHeaders
+displayName: Migrate camel-couchdb header constants to new naming convention
+description: Renames CouchDB header constants to CamelCouchDb* pattern.
+recipeList:
+  - org.apache.camel.upgrade.camel421.RenameHeaders:
+      headerMappings:
+        CouchDbDatabase: CamelCouchDbDatabase
+        CouchDbSeq: CamelCouchDbSeq
+        CouchDbId: CamelCouchDbId
+        CouchDbRev: CamelCouchDbRev
+        CouchDbMethod: CamelCouchDbMethod
+---
+## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#camel-couchbase
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.camel421.upgradeCouchbaseHeaders
+displayName: Migrate camel-couchbase header constants to new naming convention
+description: Renames Couchbase header constants to CamelCouchbase* pattern.
+recipeList:
+  - org.apache.camel.upgrade.camel421.RenameHeaders:
+      headerMappings:
+        CCB_KEY: CamelCouchbaseKey
+        CCB_ID: CamelCouchbaseId
+        CCB_TTL: CamelCouchbaseTtl
+        CCB_DDN: CamelCouchbaseDesignDocumentName
+        CCB_VN: CamelCouchbaseViewName
+---
+## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#camel-jgroups-raft
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.camel421.upgradeJGroupsRaftHeaders
+displayName: Migrate camel-jgroups-raft header constants to new naming convention
+description: Renames JGroups Raft header constants from JGROUPSRAFT_* to CamelJGroupsRaft* pattern.
+recipeList:
+  - org.apache.camel.upgrade.camel421.RenameHeaders:
+      headerMappings:
+        JGROUPSRAFT_LOG_SIZE: CamelJGroupsRaftLogSize
+        JGROUPSRAFT_COMMIT_INDEX: CamelJGroupsRaftCommitIndex
+        JGROUPSRAFT_CURRENT_TERM: CamelJGroupsRaftCurrentTerm
+        JGROUPSRAFT_IS_LEADER: CamelJGroupsRaftIsLeader
+        JGROUPSRAFT_LAST_APPLIED: CamelJGroupsRaftLastApplied
+        JGROUPSRAFT_LEADER_ADDRESS: CamelJGroupsRaftLeaderAddress
+        JGROUPSRAFT_RAFT_ID: CamelJGroupsRaftRaftId
+        JGROUPSRAFT_EVENT_TYPE: CamelJGroupsRaftEventType
+        JGROUPSRAFT_SET_OFFSET: CamelJGroupsRaftSetOffset
+        JGROUPSRAFT_SET_LENGTH: CamelJGroupsRaftSetLength
+        JGROUPSRAFT_SET_TIMEOUT: CamelJGroupsRaftSetTimeout
+        JGROUPSRAFT_SET_TIMEUNIT: CamelJGroupsRaftSetTimeUnit
+---
+## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#camel-shiro-potential-breaking-change
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.camel421.upgradeShiroHeaders
+displayName: Migrate camel-shiro security header constants to new naming convention
+description: Renames Shiro security header constants from SHIRO_SECURITY_* to CamelShiroSecurity* pattern.
+recipeList:
+  - org.apache.camel.upgrade.camel421.RenameHeaders:
+      headerMappings:
+        SHIRO_SECURITY_TOKEN: CamelShiroSecurityToken
+        SHIRO_SECURITY_USERNAME: CamelShiroSecurityUsername
+        SHIRO_SECURITY_PASSWORD: CamelShiroSecurityPassword
