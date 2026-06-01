@@ -3,8 +3,8 @@
 ## Summary
 - **Total migration topics:** 79
 - **Automatable via recipes:** 42
-- **Require manual intervention:** 23
-- **Partially automatable:** 14
+- **Require manual intervention:** 22
+- **Partially automatable:** 15
 
 ## Priority Breakdown
 - **Critical Priority:** 1 (Kafka headers)
@@ -72,7 +72,7 @@
 | true            | 61 | [camel-jt400 Headers](https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#camel-jt400-potential-breaking-change) | No           | Headers change (todo ideally find a safe partial migration)                                                                                                                                                                  |
 | true            | 62 | [camel-mail Consumer Headers](https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#camel-mail-potential-breaking-change) | No           | Headers change (todo ideally find a safe partial migration)                                                                                                                                                                  |
 | true            | 63 | [camel-milo Header](https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#camel-milo-potential-breaking-change) | No           | Headers change (todo ideally find a safe partial migration)                                                                                                                                                                  |
-| true            | 64 | [camel-kafka Headers (HIGH IMPACT)](https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#camel-kafka-potential-breaking-change) | No           | Headers change (todo ideally find a safe partial migration)                                                                                                                                                                  |
+| true            | 64 | [camel-kafka Headers (HIGH IMPACT)](https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#camel-kafka-potential-breaking-change) | Partially    | Only the simple headers are migrated                                                                                                                                                                                         |
 | true            | 65 | [Jackson Dataformat Documentation](https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#jackson-dataformat-documentation-pages-renamed) | No           | The documentation changes                                                                                                                                                                                                    |
 | true            | 66 | [camel-platform-http-main JWT Validation](https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#camel-platform-http-main) | No           | New optional feature                                                                                                                                                                                                         |
 | true            | 67 | [camel-test Port Extension](https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#camel-test) | No           | Change of AvailablePortFinder nehaviour                                                                                                                                                                                      |
