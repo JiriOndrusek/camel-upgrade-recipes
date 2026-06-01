@@ -16,6 +16,7 @@
  */
 package org.apache.camel.upgrade;
 
+import org.apache.camel.upgrade.camel421.RenameHeaders;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.DocumentExample;
 import org.openrewrite.test.RecipeSpec;
@@ -23,6 +24,8 @@ import org.openrewrite.test.RewriteTest;
 import org.openrewrite.test.TypeValidation;
 
 import static org.openrewrite.java.Assertions.java;
+import static org.openrewrite.xml.Assertions.xml;
+import static org.openrewrite.yaml.Assertions.yaml;
 
 //class has to stay public, because test is extended in project quarkus-updates
 public class CamelUpdate421Test implements RewriteTest {
@@ -35,12 +38,97 @@ public class CamelUpdate421Test implements RewriteTest {
                 .typeValidationOptions(TypeValidation.none());
     }
 
-    /**
-     * Placeholder test - recipes will be added as they are implemented
-     */
+
+    @DocumentExample
     @Test
-    void placeholderTest() {
-        // This test will be replaced with actual migration tests
-        // as recipes are implemented for Camel 4.21
+    void testCompositeMigrationXmlDsl() {
+        //language=xml
+        rewriteRun(
+                xml(
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="kafka.TOPIC">
+                                <constant>my-topic</constant>
+                            </setHeader>
+                        </route>
+                        """,
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="CamelKafkaTopic">
+                                <constant>my-topic</constant>
+                            </setHeader>
+                        </route>
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testCompositeMigrationYamlDsl() {
+        //language=yaml
+        rewriteRun(
+                yaml(
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                            steps:
+                              - setHeader:
+                                  name: kafka.TOPIC
+                                  constant: my-topic
+                        """,
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                            steps:
+                              - setHeader:
+                                  name: CamelKafkaTopic
+                                  constant: my-topic
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testCompositeMigrationJavaMethodAndSimpleExpression() {
+        // Test that the composite recipe can handle both Java method calls and Simple expressions
+        // in the same file - a common real-world pattern where headers are set in Java and
+        // referenced in Simple expressions
+        //language=java
+        rewriteRun(
+                java(
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+        
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("kafka.TOPIC", "topic1");
+                                    })
+                                    .setBody(simple("${header.kafka.TOPIC}"));
+                            }
+                        }
+                        """,
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+        
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("CamelKafkaTopic", "topic1");
+                                    })
+                                    .setBody(simple("${header.CamelKafkaTopic}"));
+                            }
+                        }
+                        """
+                )
+        );
     }
 }

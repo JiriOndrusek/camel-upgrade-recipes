@@ -32,160 +32,21 @@ recipeList:
 
   #####
   # Kafka Headers - Partial Migration (safe contexts only)
-  # Migrates .setHeader("kafka.TOPIC", ...) → .setHeader("CamelKafkaTopic", ...)
-  # Migrates ${header.kafka.TOPIC} → ${header.CamelKafkaTopic}
-  # Migrates XML/YAML DSL header names
+  # Migrates all 12 Kafka headers across all DSL types: Java (.setHeader, .getHeader),
+  # Simple expressions (${header.name}), XML DSL, and YAML DSL
   # Does NOT migrate: dynamic header names, Map.get() calls, arbitrary strings
   #####
-
-  # Java method calls
-  - org.apache.camel.upgrade.camel421.RenameHeaderInJavaMethod:
-      oldHeaderName: kafka.PARTITION_KEY
-      newHeaderName: CamelKafkaPartitionKey
-  - org.apache.camel.upgrade.camel421.RenameHeaderInJavaMethod:
-      oldHeaderName: kafka.PARTITION
-      newHeaderName: CamelKafkaPartition
-  - org.apache.camel.upgrade.camel421.RenameHeaderInJavaMethod:
-      oldHeaderName: kafka.KEY
-      newHeaderName: CamelKafkaKey
-  - org.apache.camel.upgrade.camel421.RenameHeaderInJavaMethod:
-      oldHeaderName: kafka.TOPIC
-      newHeaderName: CamelKafkaTopic
-  - org.apache.camel.upgrade.camel421.RenameHeaderInJavaMethod:
-      oldHeaderName: kafka.OVERRIDE_TOPIC
-      newHeaderName: CamelKafkaOverrideTopic
-  - org.apache.camel.upgrade.camel421.RenameHeaderInJavaMethod:
-      oldHeaderName: kafka.OFFSET
-      newHeaderName: CamelKafkaOffset
-  - org.apache.camel.upgrade.camel421.RenameHeaderInJavaMethod:
-      oldHeaderName: kafka.HEADERS
-      newHeaderName: CamelKafkaHeaders
-  - org.apache.camel.upgrade.camel421.RenameHeaderInJavaMethod:
-      oldHeaderName: kafka.LAST_RECORD_BEFORE_COMMIT
-      newHeaderName: CamelKafkaLastRecordBeforeCommit
-  - org.apache.camel.upgrade.camel421.RenameHeaderInJavaMethod:
-      oldHeaderName: kafka.LAST_POLL_RECORD
-      newHeaderName: CamelKafkaLastPollRecord
-  - org.apache.camel.upgrade.camel421.RenameHeaderInJavaMethod:
-      oldHeaderName: kafka.TIMESTAMP
-      newHeaderName: CamelKafkaTimestamp
-  - org.apache.camel.upgrade.camel421.RenameHeaderInJavaMethod:
-      oldHeaderName: kafka.OVERRIDE_TIMESTAMP
-      newHeaderName: CamelKafkaOverrideTimestamp
-  - org.apache.camel.upgrade.camel421.RenameHeaderInJavaMethod:
-      oldHeaderName: kafka.RECORD_META
-      newHeaderName: CamelKafkaRecordMeta
-
-  # Simple expressions
-  - org.apache.camel.upgrade.camel421.RenameHeaderInSimpleExpression:
-      oldHeaderName: kafka.PARTITION_KEY
-      newHeaderName: CamelKafkaPartitionKey
-  - org.apache.camel.upgrade.camel421.RenameHeaderInSimpleExpression:
-      oldHeaderName: kafka.PARTITION
-      newHeaderName: CamelKafkaPartition
-  - org.apache.camel.upgrade.camel421.RenameHeaderInSimpleExpression:
-      oldHeaderName: kafka.KEY
-      newHeaderName: CamelKafkaKey
-  - org.apache.camel.upgrade.camel421.RenameHeaderInSimpleExpression:
-      oldHeaderName: kafka.TOPIC
-      newHeaderName: CamelKafkaTopic
-  - org.apache.camel.upgrade.camel421.RenameHeaderInSimpleExpression:
-      oldHeaderName: kafka.OVERRIDE_TOPIC
-      newHeaderName: CamelKafkaOverrideTopic
-  - org.apache.camel.upgrade.camel421.RenameHeaderInSimpleExpression:
-      oldHeaderName: kafka.OFFSET
-      newHeaderName: CamelKafkaOffset
-  - org.apache.camel.upgrade.camel421.RenameHeaderInSimpleExpression:
-      oldHeaderName: kafka.HEADERS
-      newHeaderName: CamelKafkaHeaders
-  - org.apache.camel.upgrade.camel421.RenameHeaderInSimpleExpression:
-      oldHeaderName: kafka.LAST_RECORD_BEFORE_COMMIT
-      newHeaderName: CamelKafkaLastRecordBeforeCommit
-  - org.apache.camel.upgrade.camel421.RenameHeaderInSimpleExpression:
-      oldHeaderName: kafka.LAST_POLL_RECORD
-      newHeaderName: CamelKafkaLastPollRecord
-  - org.apache.camel.upgrade.camel421.RenameHeaderInSimpleExpression:
-      oldHeaderName: kafka.TIMESTAMP
-      newHeaderName: CamelKafkaTimestamp
-  - org.apache.camel.upgrade.camel421.RenameHeaderInSimpleExpression:
-      oldHeaderName: kafka.OVERRIDE_TIMESTAMP
-      newHeaderName: CamelKafkaOverrideTimestamp
-  - org.apache.camel.upgrade.camel421.RenameHeaderInSimpleExpression:
-      oldHeaderName: kafka.RECORD_META
-      newHeaderName: CamelKafkaRecordMeta
-
-  # XML DSL
-  - org.apache.camel.upgrade.camel421.RenameHeaderInXmlDsl:
-      oldHeaderName: kafka.PARTITION_KEY
-      newHeaderName: CamelKafkaPartitionKey
-  - org.apache.camel.upgrade.camel421.RenameHeaderInXmlDsl:
-      oldHeaderName: kafka.PARTITION
-      newHeaderName: CamelKafkaPartition
-  - org.apache.camel.upgrade.camel421.RenameHeaderInXmlDsl:
-      oldHeaderName: kafka.KEY
-      newHeaderName: CamelKafkaKey
-  - org.apache.camel.upgrade.camel421.RenameHeaderInXmlDsl:
-      oldHeaderName: kafka.TOPIC
-      newHeaderName: CamelKafkaTopic
-  - org.apache.camel.upgrade.camel421.RenameHeaderInXmlDsl:
-      oldHeaderName: kafka.OVERRIDE_TOPIC
-      newHeaderName: CamelKafkaOverrideTopic
-  - org.apache.camel.upgrade.camel421.RenameHeaderInXmlDsl:
-      oldHeaderName: kafka.OFFSET
-      newHeaderName: CamelKafkaOffset
-  - org.apache.camel.upgrade.camel421.RenameHeaderInXmlDsl:
-      oldHeaderName: kafka.HEADERS
-      newHeaderName: CamelKafkaHeaders
-  - org.apache.camel.upgrade.camel421.RenameHeaderInXmlDsl:
-      oldHeaderName: kafka.LAST_RECORD_BEFORE_COMMIT
-      newHeaderName: CamelKafkaLastRecordBeforeCommit
-  - org.apache.camel.upgrade.camel421.RenameHeaderInXmlDsl:
-      oldHeaderName: kafka.LAST_POLL_RECORD
-      newHeaderName: CamelKafkaLastPollRecord
-  - org.apache.camel.upgrade.camel421.RenameHeaderInXmlDsl:
-      oldHeaderName: kafka.TIMESTAMP
-      newHeaderName: CamelKafkaTimestamp
-  - org.apache.camel.upgrade.camel421.RenameHeaderInXmlDsl:
-      oldHeaderName: kafka.OVERRIDE_TIMESTAMP
-      newHeaderName: CamelKafkaOverrideTimestamp
-  - org.apache.camel.upgrade.camel421.RenameHeaderInXmlDsl:
-      oldHeaderName: kafka.RECORD_META
-      newHeaderName: CamelKafkaRecordMeta
-
-  # YAML DSL
-  - org.apache.camel.upgrade.camel421.RenameHeaderInYamlDsl:
-      oldHeaderName: kafka.PARTITION_KEY
-      newHeaderName: CamelKafkaPartitionKey
-  - org.apache.camel.upgrade.camel421.RenameHeaderInYamlDsl:
-      oldHeaderName: kafka.PARTITION
-      newHeaderName: CamelKafkaPartition
-  - org.apache.camel.upgrade.camel421.RenameHeaderInYamlDsl:
-      oldHeaderName: kafka.KEY
-      newHeaderName: CamelKafkaKey
-  - org.apache.camel.upgrade.camel421.RenameHeaderInYamlDsl:
-      oldHeaderName: kafka.TOPIC
-      newHeaderName: CamelKafkaTopic
-  - org.apache.camel.upgrade.camel421.RenameHeaderInYamlDsl:
-      oldHeaderName: kafka.OVERRIDE_TOPIC
-      newHeaderName: CamelKafkaOverrideTopic
-  - org.apache.camel.upgrade.camel421.RenameHeaderInYamlDsl:
-      oldHeaderName: kafka.OFFSET
-      newHeaderName: CamelKafkaOffset
-  - org.apache.camel.upgrade.camel421.RenameHeaderInYamlDsl:
-      oldHeaderName: kafka.HEADERS
-      newHeaderName: CamelKafkaHeaders
-  - org.apache.camel.upgrade.camel421.RenameHeaderInYamlDsl:
-      oldHeaderName: kafka.LAST_RECORD_BEFORE_COMMIT
-      newHeaderName: CamelKafkaLastRecordBeforeCommit
-  - org.apache.camel.upgrade.camel421.RenameHeaderInYamlDsl:
-      oldHeaderName: kafka.LAST_POLL_RECORD
-      newHeaderName: CamelKafkaLastPollRecord
-  - org.apache.camel.upgrade.camel421.RenameHeaderInYamlDsl:
-      oldHeaderName: kafka.TIMESTAMP
-      newHeaderName: CamelKafkaTimestamp
-  - org.apache.camel.upgrade.camel421.RenameHeaderInYamlDsl:
-      oldHeaderName: kafka.OVERRIDE_TIMESTAMP
-      newHeaderName: CamelKafkaOverrideTimestamp
-  - org.apache.camel.upgrade.camel421.RenameHeaderInYamlDsl:
-      oldHeaderName: kafka.RECORD_META
-      newHeaderName: CamelKafkaRecordMeta
+  - org.apache.camel.upgrade.camel421.RenameHeaders:
+      headerMappings:
+        kafka.PARTITION_KEY: CamelKafkaPartitionKey
+        kafka.PARTITION: CamelKafkaPartition
+        kafka.KEY: CamelKafkaKey
+        kafka.TOPIC: CamelKafkaTopic
+        kafka.OVERRIDE_TOPIC: CamelKafkaOverrideTopic
+        kafka.OFFSET: CamelKafkaOffset
+        kafka.HEADERS: CamelKafkaHeaders
+        kafka.LAST_RECORD_BEFORE_COMMIT: CamelKafkaLastRecordBeforeCommit
+        kafka.LAST_POLL_RECORD: CamelKafkaLastPollRecord
+        kafka.TIMESTAMP: CamelKafkaTimestamp
+        kafka.OVERRIDE_TIMESTAMP: CamelKafkaOverrideTimestamp
+        kafka.RECORD_META: CamelKafkaRecordMeta

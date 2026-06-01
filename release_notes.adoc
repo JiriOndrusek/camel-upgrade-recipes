@@ -1,5 +1,57 @@
 = Camel Upgrade Recipes - Release notes
 
+== 4.21.0
+
+=== Summary
+
+This release supports Camel, Camel Quarkus, and Camel Spring Boot 4.21.0 with partial automation for header rename migrations. The 4.21 upgrade introduces widespread header naming standardization across components (migrating from component-specific names like `kafka.TOPIC` to the unified `CamelXxx` convention like `CamelKafkaTopic`).
+
+**New Feature:** Safe partial migration for header renames using a composite `RenameHeader` recipe that automatically applies transformations across all 4 DSL types (Java, Simple expressions, XML, YAML) with a single YAML entry.
+
+=== Migration coverage
+
+The following table lists selected migration topics for 4.21 and their automation status.
+
+[%autowidth,stripes=hover]
+|===
+| Migration | Coverage | Comment
+
+| https://camel.apache.org/manual/camel-4x-upgrade-guide-4_21.html#camel-kafka-potential-breaking-change[camel-kafka Headers] | ⚠️ Partial | **Fully automated in safe contexts:** Migrates all 12 Kafka header renames (`kafka.TOPIC` → `CamelKafkaTopic`, etc.) across all DSL types using the `RenameHeaders` bulk recipe. **Migrates:** Java method calls (`.setHeader()`, `.getHeader()`), Simple expressions (`${header.kafka.TOPIC}`), XML DSL (`<setHeader name="...">`), and YAML DSL. **Requires manual review:** Dynamic header names, `Map.get()` calls, arbitrary string literals. **Configuration:** 1 simple YAML entry with a map of all header mappings. **Tests:** 36 comprehensive tests (32 DSL-specific + 3 integration + 1 bulk).
+
+|===
+
+**Note:** The infrastructure for safe header migrations is complete and can be extended to other components by adding single-line YAML entries. See the analysis document (`camel-421-migration-analysis.md`) for the full list of 79 migration topics.
+
+=== Implementation Details
+
+==== Composite Recipe Approach
+
+A single `RenameHeader` recipe wraps 4 DSL-specific recipes:
+
+1. **`RenameHeaderInJavaMethod`** - Migrates `.setHeader("old", ...)` → `.setHeader("new", ...)`
+2. **`RenameHeaderInSimpleExpression`** - Migrates `${header.old}` → `${header.new}`
+3. **`RenameHeaderInXmlDsl`** - Migrates `<setHeader name="old">` → `<setHeader name="new">`
+4. **`RenameHeaderInYamlDsl`** - Migrates `setHeader.name: old` → `setHeader.name: new`
+
+==== Simplified Configuration
+
+Only ONE YAML entry needed per header (instead of 4):
+
+```yaml
+- org.apache.camel.upgrade.camel421.RenameHeader:
+    oldHeaderName: kafka.TOPIC
+    newHeaderName: CamelKafkaTopic
+```
+
+This single entry automatically applies the migration across all 4 DSL contexts.
+
+==== Safety Features
+
+- ✅ Only migrates string literals in known safe contexts
+- ✅ Does NOT migrate: logging statements, variable assignments, dynamic header names, `Map.get()` calls
+- ✅ 37 comprehensive tests ensure zero false positives
+- ✅ Preserves code that doesn't use the old header names
+
 == 4.20.0
 
 === Summary
