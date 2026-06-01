@@ -24,6 +24,7 @@ import org.openrewrite.test.RewriteTest;
 import org.openrewrite.test.TypeValidation;
 
 import static org.openrewrite.java.Assertions.java;
+import static org.openrewrite.maven.Assertions.pomXml;
 import static org.openrewrite.xml.Assertions.xml;
 import static org.openrewrite.yaml.Assertions.yaml;
 
@@ -38,6 +39,27 @@ public class CamelUpdate421Test implements RewriteTest {
                 .typeValidationOptions(TypeValidation.none());
     }
 
+    /**
+     * Helper method to create a minimal pom.xml with a Camel component dependency.
+     * This is required for the ModuleHasDependency precondition to work.
+     */
+    private String pomXmlWithDependency(String artifactId) {
+        return """
+                <project>
+                    <groupId>com.example</groupId>
+                    <artifactId>test</artifactId>
+                    <version>1.0.0</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.camel</groupId>
+                            <artifactId>%s</artifactId>
+                            <version>4.20.0</version>
+                        </dependency>
+                    </dependencies>
+                </project>
+                """.formatted(artifactId);
+    }
+
 
     @DocumentExample
     @Test
@@ -45,6 +67,7 @@ public class CamelUpdate421Test implements RewriteTest {
         // Test camel-kafka header migration in Java
         //language=java
         rewriteRun(
+                pomXml(pomXmlWithDependency("camel-kafka")),
                 java(
                         """
                         import org.apache.camel.Exchange;
@@ -83,6 +106,7 @@ public class CamelUpdate421Test implements RewriteTest {
         // Test camel-jgroups header migration in Java
         //language=java
         rewriteRun(
+                pomXml(pomXmlWithDependency("camel-jgroups")),
                 java(
                         """
                         import org.apache.camel.Exchange;
@@ -123,6 +147,7 @@ public class CamelUpdate421Test implements RewriteTest {
         // Test camel-dns header migration in Java - Message API and Simple expressions
         //language=java
         rewriteRun(
+                pomXml(pomXmlWithDependency("camel-dns")),
                 java(
                         """
                         import org.apache.camel.Exchange;
@@ -165,6 +190,7 @@ public class CamelUpdate421Test implements RewriteTest {
         // Test camel-jira header migration in Java
         //language=java
         rewriteRun(
+                pomXml(pomXmlWithDependency("camel-jira")),
                 java(
                         """
                         import org.apache.camel.Exchange;
@@ -206,6 +232,7 @@ public class CamelUpdate421Test implements RewriteTest {
     void testCouchdbHeadersMigration() {
         //language=java
         rewriteRun(
+                pomXml(pomXmlWithDependency("camel-couchdb")),
                 java(
                         """
                         import org.apache.camel.Exchange;
@@ -245,6 +272,7 @@ public class CamelUpdate421Test implements RewriteTest {
     void testCouchbaseHeadersMigration() {
         //language=java
         rewriteRun(
+                pomXml(pomXmlWithDependency("camel-couchbase")),
                 java(
                         """
                         import org.apache.camel.Exchange;
@@ -284,6 +312,7 @@ public class CamelUpdate421Test implements RewriteTest {
     void testJGroupsRaftHeadersMigration() {
         //language=java
         rewriteRun(
+                pomXml(pomXmlWithDependency("camel-jgroups-raft")),
                 java(
                         """
                         import org.apache.camel.Exchange;
@@ -323,6 +352,7 @@ public class CamelUpdate421Test implements RewriteTest {
     void testShiroHeadersMigration() {
         //language=java
         rewriteRun(
+                pomXml(pomXmlWithDependency("camel-shiro")),
                 java(
                         """
                         import org.apache.camel.Exchange;
@@ -363,6 +393,7 @@ public class CamelUpdate421Test implements RewriteTest {
         // Test camel-solr header migration in Java
         //language=java
         rewriteRun(
+                pomXml(pomXmlWithDependency("camel-solr")),
                 java(
                         """
                         import org.apache.camel.Exchange;
@@ -408,6 +439,7 @@ public class CamelUpdate421Test implements RewriteTest {
     void testElasticsearchRestClientHeadersMigrationJava() {
         //language=java
         rewriteRun(
+                pomXml(pomXmlWithDependency("camel-elasticsearch-rest-client")),
                 java(
                         """
                         import org.apache.camel.Exchange;
@@ -445,6 +477,7 @@ public class CamelUpdate421Test implements RewriteTest {
     void testGitHub2HeadersMigrationJava() {
         //language=java
         rewriteRun(
+                pomXml(pomXmlWithDependency("camel-github")),
                 java(
                         """
                         import org.apache.camel.Exchange;
@@ -482,6 +515,7 @@ public class CamelUpdate421Test implements RewriteTest {
     void testGoogleCloudHeadersMigrationJava() {
         //language=java
         rewriteRun(
+                pomXml(pomXmlWithDependency("camel-google-functions")),
                 java(
                         """
                         import org.apache.camel.Exchange;
@@ -519,6 +553,7 @@ public class CamelUpdate421Test implements RewriteTest {
     void testMongoDbGridFsHeadersMigrationJava() {
         //language=java
         rewriteRun(
+                pomXml(pomXmlWithDependency("camel-mongodb-gridfs")),
                 java(
                         """
                         import org.apache.camel.Exchange;
@@ -556,6 +591,7 @@ public class CamelUpdate421Test implements RewriteTest {
     void testIrcHeadersMigrationJava() {
         //language=java
         rewriteRun(
+                pomXml(pomXmlWithDependency("camel-irc")),
                 java(
                         """
                         import org.apache.camel.Exchange;

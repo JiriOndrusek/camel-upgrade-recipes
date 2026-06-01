@@ -46,8 +46,12 @@ recipeList:
 ## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#camel-kafka---potential-breaking-change
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.camel.upgrade.camel421.upgradeKafkaRecipes
-displayName: The camel-test module has been removed from camel-bom
-description: The camel-test module has been removed from camel-bom.
+displayName: Migrate camel-kafka headers
+description: Renames Kafka header constants only if camel-kafka dependency is present.
+preconditions:
+  - org.openrewrite.java.dependencies.search.ModuleHasDependency:
+      groupIdPattern: org.apache.camel
+      artifactIdPattern: camel-kafka
 recipeList:
   - org.apache.camel.upgrade.camel421.RenameHeaders:
       headerMappings:
@@ -68,7 +72,11 @@ recipeList:
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.camel.upgrade.camel421.upgradeJGroupsHeaders
 displayName: Migrate camel-jgroups header constants to new naming convention
-description: Renames JGroups header constants from JGROUPS_* to CamelJGroups* pattern.
+description: Renames JGroups header constants from JGROUPS_* to CamelJGroups* pattern only if camel-jgroups dependency is present.
+preconditions:
+  - org.openrewrite.java.dependencies.search.ModuleHasDependency:
+      groupIdPattern: org.apache.camel
+      artifactIdPattern: camel-jgroups
 recipeList:
   - org.apache.camel.upgrade.camel421.RenameHeaders:
       headerMappings:
@@ -81,7 +89,11 @@ recipeList:
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.camel.upgrade.camel421.upgradeDnsHeaders
 displayName: Migrate camel-dns header constants to new naming convention
-description: Renames DNS header constants from dns.* pattern to CamelDns* pattern.
+description: Renames DNS header constants from dns.* pattern to CamelDns* pattern only if camel-dns dependency is present.
+preconditions:
+  - org.openrewrite.java.dependencies.search.ModuleHasDependency:
+      groupIdPattern: org.apache.camel
+      artifactIdPattern: camel-dns
 recipeList:
   - org.apache.camel.upgrade.camel421.RenameHeaders:
       headerMappings:
@@ -95,7 +107,11 @@ recipeList:
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.camel.upgrade.camel421.upgradeJiraHeaders
 displayName: Migrate camel-jira header constants to new naming convention
-description: Renames JIRA header constants to CamelJira* pattern.
+description: Renames JIRA header constants to CamelJira* pattern only if camel-jira dependency is present.
+preconditions:
+  - org.openrewrite.java.dependencies.search.ModuleHasDependency:
+      groupIdPattern: org.apache.camel
+      artifactIdPattern: camel-jira
 recipeList:
   - org.apache.camel.upgrade.camel421.RenameHeaders:
       headerMappings:
@@ -122,7 +138,11 @@ recipeList:
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.camel.upgrade.camel421.upgradeCouchdbHeaders
 displayName: Migrate camel-couchdb header constants to new naming convention
-description: Renames CouchDB header constants to CamelCouchDb* pattern.
+description: Renames CouchDB header constants to CamelCouchDb* pattern only if camel-couchdb dependency is present.
+preconditions:
+  - org.openrewrite.java.dependencies.search.ModuleHasDependency:
+      groupIdPattern: org.apache.camel
+      artifactIdPattern: camel-couchdb
 recipeList:
   - org.apache.camel.upgrade.camel421.RenameHeaders:
       headerMappings:
@@ -136,7 +156,11 @@ recipeList:
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.camel.upgrade.camel421.upgradeCouchbaseHeaders
 displayName: Migrate camel-couchbase header constants to new naming convention
-description: Renames Couchbase header constants to CamelCouchbase* pattern.
+description: Renames Couchbase header constants to CamelCouchbase* pattern only if camel-couchbase dependency is present.
+preconditions:
+  - org.openrewrite.java.dependencies.search.ModuleHasDependency:
+      groupIdPattern: org.apache.camel
+      artifactIdPattern: camel-couchbase
 recipeList:
   - org.apache.camel.upgrade.camel421.RenameHeaders:
       headerMappings:
@@ -150,7 +174,11 @@ recipeList:
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.camel.upgrade.camel421.upgradeJGroupsRaftHeaders
 displayName: Migrate camel-jgroups-raft header constants to new naming convention
-description: Renames JGroups Raft header constants from JGROUPSRAFT_* to CamelJGroupsRaft* pattern.
+description: Renames JGroups Raft header constants from JGROUPSRAFT_* to CamelJGroupsRaft* pattern only if camel-jgroups-raft dependency is present.
+preconditions:
+  - org.openrewrite.java.dependencies.search.ModuleHasDependency:
+      groupIdPattern: org.apache.camel
+      artifactIdPattern: camel-jgroups-raft
 recipeList:
   - org.apache.camel.upgrade.camel421.RenameHeaders:
       headerMappings:
@@ -171,7 +199,11 @@ recipeList:
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.camel.upgrade.camel421.upgradeShiroHeaders
 displayName: Migrate camel-shiro security header constants to new naming convention
-description: Renames Shiro security header constants from SHIRO_SECURITY_* to CamelShiroSecurity* pattern.
+description: Renames Shiro security header constants from SHIRO_SECURITY_* to CamelShiroSecurity* pattern only if camel-shiro dependency is present.
+preconditions:
+  - org.openrewrite.java.dependencies.search.ModuleHasDependency:
+      groupIdPattern: org.apache.camel
+      artifactIdPattern: camel-shiro
 recipeList:
   - org.apache.camel.upgrade.camel421.RenameHeaders:
       headerMappings:
@@ -183,7 +215,11 @@ recipeList:
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.camel.upgrade.camel421.upgradeElasticsearchRestClientHeaders
 displayName: Migrate camel-elasticsearch-rest-client header constants to new naming convention
-description: Renames Elasticsearch REST client header constants to CamelElasticsearch* pattern. Note - generic headers ID and OPERATION excluded due to conflicts with other components.
+description: Renames Elasticsearch REST client header constants to CamelElasticsearch* pattern only if camel-elasticsearch-rest-client dependency is present. Note - generic headers ID and OPERATION excluded due to conflicts with other components.
+preconditions:
+  - org.openrewrite.java.dependencies.search.ModuleHasDependency:
+      groupIdPattern: org.apache.camel
+      artifactIdPattern: camel-elasticsearch-rest-client
 recipeList:
   - org.apache.camel.upgrade.camel421.RenameHeaders:
       headerMappings:
@@ -195,7 +231,11 @@ recipeList:
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.camel.upgrade.camel421.upgradeSolrHeaders
 displayName: Migrate camel-solr header constants to new naming convention
-description: Renames Solr header constants to CamelSolr* pattern.
+description: Renames Solr header constants to CamelSolr* pattern only if camel-solr dependency is present.
+preconditions:
+  - org.openrewrite.java.dependencies.search.ModuleHasDependency:
+      groupIdPattern: org.apache.camel
+      artifactIdPattern: camel-solr
 recipeList:
   - org.apache.camel.upgrade.camel421.RenameHeaders:
       headerMappings:
@@ -214,7 +254,11 @@ recipeList:
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.camel.upgrade.camel421.upgradeGitHub2Headers
 displayName: Migrate camel-github2 producer header constants to new naming convention
-description: Renames GitHub2 producer header constants to CamelGitHub* pattern.
+description: Renames GitHub2 producer header constants to CamelGitHub* pattern only if camel-github dependency is present.
+preconditions:
+  - org.openrewrite.java.dependencies.search.ModuleHasDependency:
+      groupIdPattern: org.apache.camel
+      artifactIdPattern: camel-github
 recipeList:
   - org.apache.camel.upgrade.camel421.RenameHeaders:
       headerMappings:
@@ -227,7 +271,11 @@ recipeList:
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.camel.upgrade.camel421.upgradeGoogleCloudHeaders
 displayName: Migrate camel-google-cloud header constants to new naming convention
-description: Renames Google Cloud header constants to CamelGoogleCloud* pattern.
+description: Renames Google Cloud header constants to CamelGoogleCloud* pattern only if camel-google-functions dependency is present.
+preconditions:
+  - org.openrewrite.java.dependencies.search.ModuleHasDependency:
+      groupIdPattern: org.apache.camel
+      artifactIdPattern: camel-google-functions
 recipeList:
   - org.apache.camel.upgrade.camel421.RenameHeaders:
       headerMappings:
@@ -239,7 +287,11 @@ recipeList:
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.camel.upgrade.camel421.upgradeMongoDbGridFsHeaders
 displayName: Migrate camel-mongodb-gridfs header constants to new naming convention
-description: Renames MongoDB GridFS header constants to CamelGridFs* pattern.
+description: Renames MongoDB GridFS header constants to CamelGridFs* pattern only if camel-mongodb-gridfs dependency is present.
+preconditions:
+  - org.openrewrite.java.dependencies.search.ModuleHasDependency:
+      groupIdPattern: org.apache.camel
+      artifactIdPattern: camel-mongodb-gridfs
 recipeList:
   - org.apache.camel.upgrade.camel421.RenameHeaders:
       headerMappings:
@@ -253,7 +305,11 @@ recipeList:
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.camel.upgrade.camel421.upgradeIrcHeaders
 displayName: Migrate camel-irc header constants to new naming convention
-description: Renames IRC header constants from irc.* to CamelIrc* pattern.
+description: Renames IRC header constants from irc.* to CamelIrc* pattern only if camel-irc dependency is present.
+preconditions:
+  - org.openrewrite.java.dependencies.search.ModuleHasDependency:
+      groupIdPattern: org.apache.camel
+      artifactIdPattern: camel-irc
 recipeList:
   - org.apache.camel.upgrade.camel421.RenameHeaders:
       headerMappings:
