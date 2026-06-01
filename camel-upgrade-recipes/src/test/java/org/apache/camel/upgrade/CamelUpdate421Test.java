@@ -453,4 +453,1334 @@ public class CamelUpdate421Test implements RewriteTest {
                 )
         );
     }
+
+    @Test
+    void testElasticsearchRestClientHeadersMigrationJava() {
+        //language=java
+        rewriteRun(
+                java(
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("SEARCH_QUERY", "test");
+                                    })
+                                    .to("elasticsearch-rest-client:cluster");
+                            }
+                        }
+                        """,
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("CamelElasticsearchSearchQuery", "test");
+                                    })
+                                    .to("elasticsearch-rest-client:cluster");
+                            }
+                        }
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testElasticsearchRestClientHeadersMigrationXml() {
+        //language=xml
+        rewriteRun(
+                xml(
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="SEARCH_QUERY">
+                                <constant>test query</constant>
+                            </setHeader>
+                            <to uri="elasticsearch-rest-client:cluster"/>
+                        </route>
+                        """,
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="CamelElasticsearchSearchQuery">
+                                <constant>test query</constant>
+                            </setHeader>
+                            <to uri="elasticsearch-rest-client:cluster"/>
+                        </route>
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testElasticsearchRestClientHeadersMigrationYaml() {
+        //language=yaml
+        rewriteRun(
+                yaml(
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: SEARCH_QUERY
+                                  constant: test query
+                              - to:
+                                  uri: "elasticsearch-rest-client:cluster"
+                        """,
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: CamelElasticsearchSearchQuery
+                                  constant: test query
+                              - to:
+                                  uri: "elasticsearch-rest-client:cluster"
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testCxfHeadersMigrationJava() {
+        //language=java
+        rewriteRun(
+                java(
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("operationName", "processOrder");
+                                    })
+                                    .to("cxf:bean:serviceEndpoint");
+                            }
+                        }
+                        """,
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("CamelCxfOperationName", "processOrder");
+                                    })
+                                    .to("cxf:bean:serviceEndpoint");
+                            }
+                        }
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testCxfHeadersMigrationXml() {
+        //language=xml
+        rewriteRun(
+                xml(
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="operationName">
+                                <constant>processOrder</constant>
+                            </setHeader>
+                            <to uri="cxf:bean:serviceEndpoint"/>
+                        </route>
+                        """,
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="CamelCxfOperationName">
+                                <constant>processOrder</constant>
+                            </setHeader>
+                            <to uri="cxf:bean:serviceEndpoint"/>
+                        </route>
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testCxfHeadersMigrationYaml() {
+        //language=yaml
+        rewriteRun(
+                yaml(
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: operationName
+                                  constant: processOrder
+                              - to:
+                                  uri: "cxf:bean:serviceEndpoint"
+                        """,
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: CamelCxfOperationName
+                                  constant: processOrder
+                              - to:
+                                  uri: "cxf:bean:serviceEndpoint"
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testWeb3jHeadersMigrationJava() {
+        //language=java
+        rewriteRun(
+                java(
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("FROM_ADDRESS", "0x123");
+                                    })
+                                    .to("web3j:http://localhost:8545");
+                            }
+                        }
+                        """,
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("CamelWeb3jFromAddress", "0x123");
+                                    })
+                                    .to("web3j:http://localhost:8545");
+                            }
+                        }
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testWeb3jHeadersMigrationXml() {
+        //language=xml
+        rewriteRun(
+                xml(
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="FROM_ADDRESS">
+                                <constant>0x123</constant>
+                            </setHeader>
+                            <to uri="web3j:http://localhost:8545"/>
+                        </route>
+                        """,
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="CamelWeb3jFromAddress">
+                                <constant>0x123</constant>
+                            </setHeader>
+                            <to uri="web3j:http://localhost:8545"/>
+                        </route>
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testWeb3jHeadersMigrationYaml() {
+        //language=yaml
+        rewriteRun(
+                yaml(
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: FROM_ADDRESS
+                                  constant: 0x123
+                              - to:
+                                  uri: "web3j:http://localhost:8545"
+                        """,
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: CamelWeb3jFromAddress
+                                  constant: 0x123
+                              - to:
+                                  uri: "web3j:http://localhost:8545"
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testOpenstackHeadersMigrationJava() {
+        //language=java
+        rewriteRun(
+                java(
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("FlavorId", "m1.small");
+                                    })
+                                    .to("openstack-nova:http://localhost:5000");
+                            }
+                        }
+                        """,
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("CamelOpenstackNovaFlavorId", "m1.small");
+                                    })
+                                    .to("openstack-nova:http://localhost:5000");
+                            }
+                        }
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testOpenstackHeadersMigrationXml() {
+        //language=xml
+        rewriteRun(
+                xml(
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="FlavorId">
+                                <constant>m1.small</constant>
+                            </setHeader>
+                            <to uri="openstack-nova:http://localhost:5000"/>
+                        </route>
+                        """,
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="CamelOpenstackNovaFlavorId">
+                                <constant>m1.small</constant>
+                            </setHeader>
+                            <to uri="openstack-nova:http://localhost:5000"/>
+                        </route>
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testOpenstackHeadersMigrationYaml() {
+        //language=yaml
+        rewriteRun(
+                yaml(
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: FlavorId
+                                  constant: m1.small
+                              - to:
+                                  uri: "openstack-nova:http://localhost:5000"
+                        """,
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: CamelOpenstackNovaFlavorId
+                                  constant: m1.small
+                              - to:
+                                  uri: "openstack-nova:http://localhost:5000"
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testPdfHeadersMigrationJava() {
+        //language=java
+        rewriteRun(
+                java(
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("pdf-document", "document.pdf");
+                                    })
+                                    .to("pdf:create");
+                            }
+                        }
+                        """,
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("CamelPdfDocument", "document.pdf");
+                                    })
+                                    .to("pdf:create");
+                            }
+                        }
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testPdfHeadersMigrationXml() {
+        //language=xml
+        rewriteRun(
+                xml(
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="pdf-document">
+                                <constant>document.pdf</constant>
+                            </setHeader>
+                            <to uri="pdf:create"/>
+                        </route>
+                        """,
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="CamelPdfDocument">
+                                <constant>document.pdf</constant>
+                            </setHeader>
+                            <to uri="pdf:create"/>
+                        </route>
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testPdfHeadersMigrationYaml() {
+        //language=yaml
+        rewriteRun(
+                yaml(
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: pdf-document
+                                  constant: document.pdf
+                              - to:
+                                  uri: "pdf:create"
+                        """,
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: CamelPdfDocument
+                                  constant: document.pdf
+                              - to:
+                                  uri: "pdf:create"
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testElasticsearchHeadersMigrationJava() {
+        //language=java
+        rewriteRun(
+                java(
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("indexName", "myindex");
+                                    })
+                                    .to("elasticsearch:cluster");
+                            }
+                        }
+                        """,
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("CamelElasticsearchIndexName", "myindex");
+                                    })
+                                    .to("elasticsearch:cluster");
+                            }
+                        }
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testElasticsearchHeadersMigrationXml() {
+        //language=xml
+        rewriteRun(
+                xml(
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="indexName">
+                                <constant>myindex</constant>
+                            </setHeader>
+                            <to uri="elasticsearch:cluster"/>
+                        </route>
+                        """,
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="CamelElasticsearchIndexName">
+                                <constant>myindex</constant>
+                            </setHeader>
+                            <to uri="elasticsearch:cluster"/>
+                        </route>
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testElasticsearchHeadersMigrationYaml() {
+        //language=yaml
+        rewriteRun(
+                yaml(
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: indexName
+                                  constant: myindex
+                              - to:
+                                  uri: "elasticsearch:cluster"
+                        """,
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: CamelElasticsearchIndexName
+                                  constant: myindex
+                              - to:
+                                  uri: "elasticsearch:cluster"
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testGitHub2HeadersMigrationJava() {
+        //language=java
+        rewriteRun(
+                java(
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("GitHubIssueTitle", "Bug Report");
+                                    })
+                                    .to("github2:pullRequests");
+                            }
+                        }
+                        """,
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("CamelGitHubIssueTitle", "Bug Report");
+                                    })
+                                    .to("github2:pullRequests");
+                            }
+                        }
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testGitHub2HeadersMigrationXml() {
+        //language=xml
+        rewriteRun(
+                xml(
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="GitHubIssueTitle">
+                                <constant>Bug Report</constant>
+                            </setHeader>
+                            <to uri="github2:pullRequests"/>
+                        </route>
+                        """,
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="CamelGitHubIssueTitle">
+                                <constant>Bug Report</constant>
+                            </setHeader>
+                            <to uri="github2:pullRequests"/>
+                        </route>
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testGitHub2HeadersMigrationYaml() {
+        //language=yaml
+        rewriteRun(
+                yaml(
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: GitHubIssueTitle
+                                  constant: Bug Report
+                              - to:
+                                  uri: "github2:pullRequests"
+                        """,
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: CamelGitHubIssueTitle
+                                  constant: Bug Report
+                              - to:
+                                  uri: "github2:pullRequests"
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testGoogleCloudHeadersMigrationJava() {
+        //language=java
+        rewriteRun(
+                java(
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("GoogleCloudFunctionsOperation", "createFunction");
+                                    })
+                                    .to("google-functions:project");
+                            }
+                        }
+                        """,
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("CamelGoogleCloudFunctionsOperation", "createFunction");
+                                    })
+                                    .to("google-functions:project");
+                            }
+                        }
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testGoogleCloudHeadersMigrationXml() {
+        //language=xml
+        rewriteRun(
+                xml(
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="GoogleCloudFunctionsOperation">
+                                <constant>createFunction</constant>
+                            </setHeader>
+                            <to uri="google-functions:project"/>
+                        </route>
+                        """,
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="CamelGoogleCloudFunctionsOperation">
+                                <constant>createFunction</constant>
+                            </setHeader>
+                            <to uri="google-functions:project"/>
+                        </route>
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testGoogleCloudHeadersMigrationYaml() {
+        //language=yaml
+        rewriteRun(
+                yaml(
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: GoogleCloudFunctionsOperation
+                                  constant: createFunction
+                              - to:
+                                  uri: "google-functions:project"
+                        """,
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: CamelGoogleCloudFunctionsOperation
+                                  constant: createFunction
+                              - to:
+                                  uri: "google-functions:project"
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testArangoDbHeadersMigrationJava() {
+        //language=java
+        rewriteRun(
+                java(
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("key", "doc123");
+                                    })
+                                    .to("arangodb:mydb");
+                            }
+                        }
+                        """,
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("CamelArangoDbKey", "doc123");
+                                    })
+                                    .to("arangodb:mydb");
+                            }
+                        }
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testArangoDbHeadersMigrationXml() {
+        //language=xml
+        rewriteRun(
+                xml(
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="key">
+                                <constant>doc123</constant>
+                            </setHeader>
+                            <to uri="arangodb:mydb"/>
+                        </route>
+                        """,
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="CamelArangoDbKey">
+                                <constant>doc123</constant>
+                            </setHeader>
+                            <to uri="arangodb:mydb"/>
+                        </route>
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testArangoDbHeadersMigrationYaml() {
+        //language=yaml
+        rewriteRun(
+                yaml(
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: key
+                                  constant: doc123
+                              - to:
+                                  uri: "arangodb:mydb"
+                        """,
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: CamelArangoDbKey
+                                  constant: doc123
+                              - to:
+                                  uri: "arangodb:mydb"
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testJt400HeadersMigrationJava() {
+        //language=java
+        rewriteRun(
+                java(
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("KEY", "mykey");
+                                    })
+                                    .to("jt400:user:pass@host/qsys.lib/library.lib/queue.dtaq");
+                            }
+                        }
+                        """,
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("CamelJt400Key", "mykey");
+                                    })
+                                    .to("jt400:user:pass@host/qsys.lib/library.lib/queue.dtaq");
+                            }
+                        }
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testJt400HeadersMigrationXml() {
+        //language=xml
+        rewriteRun(
+                xml(
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="KEY">
+                                <constant>mykey</constant>
+                            </setHeader>
+                            <to uri="jt400:user:pass@host/qsys.lib/library.lib/queue.dtaq"/>
+                        </route>
+                        """,
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="CamelJt400Key">
+                                <constant>mykey</constant>
+                            </setHeader>
+                            <to uri="jt400:user:pass@host/qsys.lib/library.lib/queue.dtaq"/>
+                        </route>
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testJt400HeadersMigrationYaml() {
+        //language=yaml
+        rewriteRun(
+                yaml(
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: KEY
+                                  constant: mykey
+                              - to:
+                                  uri: "jt400:user:pass@host/qsys.lib/library.lib/queue.dtaq"
+                        """,
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: CamelJt400Key
+                                  constant: mykey
+                              - to:
+                                  uri: "jt400:user:pass@host/qsys.lib/library.lib/queue.dtaq"
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testMailHeadersMigrationJava() {
+        //language=java
+        rewriteRun(
+                java(
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("delete", true);
+                                    })
+                                    .to("mail:inbox");
+                            }
+                        }
+                        """,
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("CamelMailDelete", true);
+                                    })
+                                    .to("mail:inbox");
+                            }
+                        }
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testMailHeadersMigrationXml() {
+        //language=xml
+        rewriteRun(
+                xml(
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="delete">
+                                <constant>true</constant>
+                            </setHeader>
+                            <to uri="mail:inbox"/>
+                        </route>
+                        """,
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="CamelMailDelete">
+                                <constant>true</constant>
+                            </setHeader>
+                            <to uri="mail:inbox"/>
+                        </route>
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testMailHeadersMigrationYaml() {
+        //language=yaml
+        rewriteRun(
+                yaml(
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: delete
+                                  constant: true
+                              - to:
+                                  uri: "mail:inbox"
+                        """,
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: CamelMailDelete
+                                  constant: true
+                              - to:
+                                  uri: "mail:inbox"
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testMiloHeadersMigrationJava() {
+        //language=java
+        rewriteRun(
+                java(
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("await", true);
+                                    })
+                                    .to("milo-client:tcp://localhost:4840");
+                            }
+                        }
+                        """,
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("CamelMiloAwait", true);
+                                    })
+                                    .to("milo-client:tcp://localhost:4840");
+                            }
+                        }
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testMiloHeadersMigrationXml() {
+        //language=xml
+        rewriteRun(
+                xml(
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="await">
+                                <constant>true</constant>
+                            </setHeader>
+                            <to uri="milo-client:tcp://localhost:4840"/>
+                        </route>
+                        """,
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="CamelMiloAwait">
+                                <constant>true</constant>
+                            </setHeader>
+                            <to uri="milo-client:tcp://localhost:4840"/>
+                        </route>
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testMiloHeadersMigrationYaml() {
+        //language=yaml
+        rewriteRun(
+                yaml(
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: await
+                                  constant: true
+                              - to:
+                                  uri: "milo-client:tcp://localhost:4840"
+                        """,
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: CamelMiloAwait
+                                  constant: true
+                              - to:
+                                  uri: "milo-client:tcp://localhost:4840"
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testMongoDbGridFsHeadersMigrationJava() {
+        //language=java
+        rewriteRun(
+                java(
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("gridfs.operation", "create");
+                                    })
+                                    .to("mongodb-gridfs:mydb");
+                            }
+                        }
+                        """,
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("CamelGridFsOperation", "create");
+                                    })
+                                    .to("mongodb-gridfs:mydb");
+                            }
+                        }
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testMongoDbGridFsHeadersMigrationXml() {
+        //language=xml
+        rewriteRun(
+                xml(
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="gridfs.operation">
+                                <constant>create</constant>
+                            </setHeader>
+                            <to uri="mongodb-gridfs:mydb"/>
+                        </route>
+                        """,
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="CamelGridFsOperation">
+                                <constant>create</constant>
+                            </setHeader>
+                            <to uri="mongodb-gridfs:mydb"/>
+                        </route>
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testMongoDbGridFsHeadersMigrationYaml() {
+        //language=yaml
+        rewriteRun(
+                yaml(
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: gridfs.operation
+                                  constant: create
+                              - to:
+                                  uri: "mongodb-gridfs:mydb"
+                        """,
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: CamelGridFsOperation
+                                  constant: create
+                              - to:
+                                  uri: "mongodb-gridfs:mydb"
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testIrcHeadersMigrationJava() {
+        //language=java
+        rewriteRun(
+                java(
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("irc.sendTo", "#channel");
+                                    })
+                                    .to("irc:bot@irc.server.org");
+                            }
+                        }
+                        """,
+                        """
+                        import org.apache.camel.Exchange;
+                        import org.apache.camel.builder.RouteBuilder;
+
+                        class Test extends RouteBuilder {
+                            public void configure() {
+                                from("direct:start")
+                                    .process(exchange -> {
+                                        exchange.getIn().setHeader("CamelIrcSendTo", "#channel");
+                                    })
+                                    .to("irc:bot@irc.server.org");
+                            }
+                        }
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testIrcHeadersMigrationXml() {
+        //language=xml
+        rewriteRun(
+                xml(
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="irc.sendTo">
+                                <constant>#channel</constant>
+                            </setHeader>
+                            <to uri="irc:bot@irc.server.org"/>
+                        </route>
+                        """,
+                        """
+                        <route xmlns="http://camel.apache.org/schema/spring">
+                            <from uri="direct:start"/>
+                            <setHeader name="CamelIrcSendTo">
+                                <constant>#channel</constant>
+                            </setHeader>
+                            <to uri="irc:bot@irc.server.org"/>
+                        </route>
+                        """
+                )
+        );
+    }
+
+    @Test
+    void testIrcHeadersMigrationYaml() {
+        //language=yaml
+        rewriteRun(
+                yaml(
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: irc.sendTo
+                                  constant: "#channel"
+                              - to:
+                                  uri: "irc:bot@irc.server.org"
+                        """,
+                        """
+                        - route:
+                            from:
+                              uri: "direct:start"
+                              steps:
+                              - setHeader:
+                                  name: CamelIrcSendTo
+                                  constant: "#channel"
+                              - to:
+                                  uri: "irc:bot@irc.server.org"
+                        """
+                )
+        );
+    }
 }
