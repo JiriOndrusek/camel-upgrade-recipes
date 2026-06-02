@@ -34,10 +34,15 @@ public class CamelUpdate421Test implements RewriteTest {
 
     @Override
     public void defaults(RecipeSpec spec) {
+        // Note: We load the full 4.21 recipe here, but each component recipe has
+        // ModuleHasDependency preconditions that ensure only relevant recipes run
+        // based on which dependencies are present in the test's pom.xml
         CamelTestUtil.recipe(spec, CamelTestUtil.CamelVersion.v4_21)
                 .parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v4_20,
                         "camel-core-model", "camel-api"))
-                .typeValidationOptions(TypeValidation.none());
+                .typeValidationOptions(TypeValidation.none())
+                // Explicitly set expected cycles to 1 to prevent other recipes from running
+                .expectedCyclesThatMakeChanges(1);
     }
 
     @DocumentExample
@@ -46,7 +51,7 @@ public class CamelUpdate421Test implements RewriteTest {
         // Test camel-kafka header migration in Java
         //language=java
         rewriteRun(
-                mavenProject("parent",
+                mavenProject("test-kafka",
                         pomXml(CamelTestUtil.pomXmlWithDependency("camel-kafka", CamelTestUtil.CamelVersion.v4_20)),
                         java(
                         """
@@ -87,7 +92,7 @@ public class CamelUpdate421Test implements RewriteTest {
         // Test camel-jgroups header migration in Java
         //language=java
         rewriteRun(
-                mavenProject("parent",
+                mavenProject("test-jgroups",
                         pomXml(CamelTestUtil.pomXmlWithDependency("camel-jgroups", CamelTestUtil.CamelVersion.v4_20)),
                         java(
                         """
@@ -130,7 +135,7 @@ public class CamelUpdate421Test implements RewriteTest {
         // Test camel-dns header migration in Java - Message API and Simple expressions
         //language=java
         rewriteRun(
-                mavenProject("parent",
+                mavenProject("test-dns",
                         pomXml(CamelTestUtil.pomXmlWithDependency("camel-dns", CamelTestUtil.CamelVersion.v4_20)),
                         java(
                         """
@@ -175,7 +180,7 @@ public class CamelUpdate421Test implements RewriteTest {
         // Test camel-jira header migration in Java
         //language=java
         rewriteRun(
-                mavenProject("parent",
+                mavenProject("test-jira",
                         pomXml(CamelTestUtil.pomXmlWithDependency("camel-jira", CamelTestUtil.CamelVersion.v4_20)),
                         java(
                         """
@@ -219,7 +224,7 @@ public class CamelUpdate421Test implements RewriteTest {
     void testCouchdbHeadersMigration() {
         //language=java
         rewriteRun(
-                mavenProject("parent",
+                mavenProject("test-couchdb",
                         pomXml(CamelTestUtil.pomXmlWithDependency("camel-couchdb", CamelTestUtil.CamelVersion.v4_20)),
                         java(
                         """
@@ -261,7 +266,7 @@ public class CamelUpdate421Test implements RewriteTest {
     void testCouchbaseHeadersMigration() {
         //language=java
         rewriteRun(
-                mavenProject("parent",
+                mavenProject("test-couchbase",
                         pomXml(CamelTestUtil.pomXmlWithDependency("camel-couchbase", CamelTestUtil.CamelVersion.v4_20)),
                         java(
                         """
@@ -303,7 +308,7 @@ public class CamelUpdate421Test implements RewriteTest {
     void testJGroupsRaftHeadersMigration() {
         //language=java
         rewriteRun(
-                mavenProject("parent",
+                mavenProject("test-jgroups-raft",
                         pomXml(CamelTestUtil.pomXmlWithDependency("camel-jgroups-raft", CamelTestUtil.CamelVersion.v4_20)),
                         java(
                         """
@@ -345,7 +350,7 @@ public class CamelUpdate421Test implements RewriteTest {
     void testShiroHeadersMigration() {
         //language=java
         rewriteRun(
-                mavenProject("parent",
+                mavenProject("test-shiro",
                         pomXml(CamelTestUtil.pomXmlWithDependency("camel-shiro", CamelTestUtil.CamelVersion.v4_20)),
                         java(
                         """
@@ -388,7 +393,7 @@ public class CamelUpdate421Test implements RewriteTest {
         // Test camel-solr header migration in Java
         //language=java
         rewriteRun(
-                mavenProject("parent",
+                mavenProject("test-solr",
                         pomXml(CamelTestUtil.pomXmlWithDependency("camel-solr", CamelTestUtil.CamelVersion.v4_20)),
                         java(
                         """
@@ -436,7 +441,7 @@ public class CamelUpdate421Test implements RewriteTest {
     void testElasticsearchRestClientHeadersMigrationJava() {
         //language=java
         rewriteRun(
-                mavenProject("parent",
+                mavenProject("test-elasticsearch",
                         pomXml(CamelTestUtil.pomXmlWithDependency("camel-elasticsearch-rest-client", CamelTestUtil.CamelVersion.v4_20)),
                         java(
                         """
@@ -476,7 +481,7 @@ public class CamelUpdate421Test implements RewriteTest {
     void testGitHub2HeadersMigrationJava() {
         //language=java
         rewriteRun(
-                mavenProject("parent",
+                mavenProject("test-github",
                         pomXml(CamelTestUtil.pomXmlWithDependency("camel-github", CamelTestUtil.CamelVersion.v4_20)),
                         java(
                         """
@@ -516,7 +521,7 @@ public class CamelUpdate421Test implements RewriteTest {
     void testGoogleCloudHeadersMigrationJava() {
         //language=java
         rewriteRun(
-                mavenProject("parent",
+                mavenProject("test-google-cloud",
                         pomXml(CamelTestUtil.pomXmlWithDependency("camel-google-functions", CamelTestUtil.CamelVersion.v4_20)),
                         java(
                         """
@@ -556,7 +561,7 @@ public class CamelUpdate421Test implements RewriteTest {
     void testMongoDbGridFsHeadersMigrationJava() {
         //language=java
         rewriteRun(
-                mavenProject("parent",
+                mavenProject("test-mongodb",
                         pomXml(CamelTestUtil.pomXmlWithDependency("camel-mongodb-gridfs", CamelTestUtil.CamelVersion.v4_20)),
                         java(
                         """
@@ -596,7 +601,7 @@ public class CamelUpdate421Test implements RewriteTest {
     void testIrcHeadersMigrationJava() {
         //language=java
         rewriteRun(
-                mavenProject("parent",
+                mavenProject("test-irc",
                         pomXml(CamelTestUtil.pomXmlWithDependency("camel-irc", CamelTestUtil.CamelVersion.v4_20)),
                         java(
                         """
@@ -639,7 +644,8 @@ public class CamelUpdate421Test implements RewriteTest {
         // Using camel-core instead of camel-kafka means the precondition will block the recipe
         //language=java
         rewriteRun(
-                mavenProject("parent",
+                spec -> spec.expectedCyclesThatMakeChanges(0),
+                mavenProject("test-negative",
                         pomXml(CamelTestUtil.pomXmlWithDependency("camel-core", CamelTestUtil.CamelVersion.v4_20)),
                         java(
                         """

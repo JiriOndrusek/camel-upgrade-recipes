@@ -193,6 +193,9 @@ public class CamelTestUtil {
                     <groupId>com.example</groupId>
                     <artifactId>test</artifactId>
                     <version>1.0.0</version>
+                    <properties>                                                                                     \s
+                        <maven.compiler.release>17</maven.compiler.release>                                          \s
+                    </properties>
                     <dependencies>
                         <dependency>
                             <groupId>org.apache.camel</groupId>
