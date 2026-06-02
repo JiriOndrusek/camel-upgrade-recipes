@@ -179,4 +179,29 @@ public class CamelTestUtil {
         return "";
     }
 
+    /**
+     * Helper method to create a minimal pom.xml with a Camel component dependency.
+     * This is required for the ModuleHasDependency precondition to work in tests.
+     *
+     * @param artifactId the Camel component artifact ID (e.g., "camel-kafka")
+     * @param version the Camel version to use for the dependency
+     * @return a minimal pom.xml string with the specified dependency
+     */
+    public static String pomXmlWithDependency(String artifactId, CamelVersion version) {
+        return """
+                <project>
+                    <groupId>com.example</groupId>
+                    <artifactId>test</artifactId>
+                    <version>1.0.0</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.camel</groupId>
+                            <artifactId>%s</artifactId>
+                            <version>%s</version>
+                        </dependency>
+                    </dependencies>
+                </project>
+                """.formatted(artifactId, version.getVersion());
+    }
+
 }
