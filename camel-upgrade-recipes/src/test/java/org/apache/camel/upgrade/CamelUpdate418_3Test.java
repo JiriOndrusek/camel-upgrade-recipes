@@ -36,7 +36,7 @@ public class CamelUpdate418_3Test implements RewriteTest {
     @Override
     public void defaults(RecipeSpec spec) {
         CamelTestUtil.recipe(spec, CamelTestUtil.CamelVersion.v4_18_3)
-                .parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v4_18, "camel-api",
+                .parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v4_18_1, "camel-api",
                         "camel-core-model", "camel-support"))
                 .typeValidationOptions(TypeValidation.none());
     }
@@ -79,58 +79,6 @@ public class CamelUpdate418_3Test implements RewriteTest {
                                         exchange.getIn().setHeader("CamelLuceneReturnLuceneDocs", true);
                                     })
                                     .to("lucene:insert");
-                            }
-                        }
-                        """
-                )
-                )
-        );
-    }
-
-    @Test
-    void testElasticsearchHeadersMigrationJava() {
-        //language=java
-        rewriteRun(
-                mavenProject("test-elasticsearch",
-                        pomXml(CamelTestUtil.pomXmlWithDependency("camel-elasticsearch", CamelTestUtil.CamelVersion.v4_18)),
-                        java(
-                        """
-                        import org.apache.camel.Exchange;
-                        import org.apache.camel.builder.RouteBuilder;
-
-                        class Test extends RouteBuilder {
-                            public void configure() {
-                                from("direct:start")
-                                    .process(exchange -> {
-                                        // Generic headers not migrated to prevent false positives and conflicts with OpenSearch
-                                        exchange.getIn().setHeader("operation", "INDEX");
-                                        exchange.getIn().setHeader("indexId", "123");
-                                        exchange.getIn().setHeader("documentClass", String.class);
-                                        exchange.getIn().setHeader("waitForActiveShards", 2);
-                                        // Only Elasticsearch-unique header is migrated
-                                        exchange.getIn().setHeader("enableDocumentOnlyMode", true);
-                                    })
-                                    .to("elasticsearch:myCluster");
-                            }
-                        }
-                        """,
-                        """
-                        import org.apache.camel.Exchange;
-                        import org.apache.camel.builder.RouteBuilder;
-
-                        class Test extends RouteBuilder {
-                            public void configure() {
-                                from("direct:start")
-                                    .process(exchange -> {
-                                        // Generic headers not migrated to prevent false positives and conflicts with OpenSearch
-                                        exchange.getIn().setHeader("operation", "INDEX");
-                                        exchange.getIn().setHeader("indexId", "123");
-                                        exchange.getIn().setHeader("documentClass", String.class);
-                                        exchange.getIn().setHeader("waitForActiveShards", 2);
-                                        // Only Elasticsearch-unique header is migrated
-                                        exchange.getIn().setHeader("CamelElasticsearchEnableDocumentOnlyMode", true);
-                                    })
-                                    .to("elasticsearch:myCluster");
                             }
                         }
                         """
@@ -351,46 +299,6 @@ public class CamelUpdate418_3Test implements RewriteTest {
                                         exchange.getIn().setHeader("CamelSolrParam.commitWithin", 1000);
                                     })
                                     .to("solr:http://localhost:8983/solr");
-                            }
-                        }
-                        """
-                )
-                )
-        );
-    }
-
-    @Test
-    void testElasticsearchRestClientHeadersMigrationJava() {
-        //language=java
-        rewriteRun(
-                mavenProject("test-elasticsearch",
-                        pomXml(CamelTestUtil.pomXmlWithDependency("camel-elasticsearch-rest-client", CamelTestUtil.CamelVersion.v4_18)),
-                        java(
-                        """
-                        import org.apache.camel.Exchange;
-                        import org.apache.camel.builder.RouteBuilder;
-
-                        class Test extends RouteBuilder {
-                            public void configure() {
-                                from("direct:start")
-                                    .process(exchange -> {
-                                        exchange.getIn().setHeader("SEARCH_QUERY", "test");
-                                    })
-                                    .to("elasticsearch-rest-client:cluster");
-                            }
-                        }
-                        """,
-                        """
-                        import org.apache.camel.Exchange;
-                        import org.apache.camel.builder.RouteBuilder;
-
-                        class Test extends RouteBuilder {
-                            public void configure() {
-                                from("direct:start")
-                                    .process(exchange -> {
-                                        exchange.getIn().setHeader("CamelElasticsearchSearchQuery", "test");
-                                    })
-                                    .to("elasticsearch-rest-client:cluster");
                             }
                         }
                         """

@@ -43,7 +43,6 @@ recipeList:
   - org.apache.camel.upgrade.camel418_3.upgradeWeb3jHeaders
   # Partial automation - header string literals migrated, DSL accessor methods require manual update
   - org.apache.camel.upgrade.camel418_3.upgradeLuceneHeaders
-  - org.apache.camel.upgrade.camel418_3.upgradeElasticsearchHeaders
   # Other migrations
   - org.apache.camel.upgrade.camel419.YamlDsl419RoutePolicyRecipe
   - org.apache.camel.upgrade.camel419.YamlDsl419SagaRecipe
@@ -143,25 +142,17 @@ recipeList:
 ## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_18.adoc#camel-solr
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.camel.upgrade.camel418_3.upgradeSolrHeaders
-displayName: Migrate camel-solr header constants to new naming convention
-description: Renames Solr header constants to CamelSolr* pattern only if camel-solr dependency is present.
+displayName: Migrate camel-solr header prefixes to new naming convention
+description: Renames Solr header prefixes SolrField. and SolrParam. to CamelSolrField. and CamelSolrParam. when camel-solr dependency is present. Routes that reference constants symbolically continue to work without changes. Note - Because the renamed prefixes now begin with Camel, they are stripped by HeaderFilterStrategy when crossing transport boundaries. Routes that bridge external transports and want to drive Solr fields/params from headers must carry values in non-Camel-prefixed headers and map them in the route.
 preconditions:
   - org.openrewrite.java.dependencies.search.ModuleHasDependency:
       groupIdPattern: org.apache.camel
       artifactIdPattern: camel-solr
 recipeList:
-  - org.apache.camel.upgrade.camel421.RenameHeaders:
-      headerMappings:
-        SolrOperation: CamelSolrOperation
-        SolrCollection: CamelSolrCollection
-        SolrRequestHandler: CamelSolrRequestHandler
-        SolrQueryString: CamelSolrQueryString
-        SolrSize: CamelSolrSize
-        SolrFrom: CamelSolrFrom
-        SolrParams: CamelSolrParams
-        SolrDeleteByQuery: CamelSolrDeleteByQuery
-        SolrField.id: CamelSolrField.id
-        SolrParam.commit: CamelSolrParam.commit
+  - org.apache.camel.upgrade.camel421.RenameHeaderPrefixes:
+      prefixMappings:
+        SolrField.: CamelSolrField.
+        SolrParam.: CamelSolrParam.
 ---
 ## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_18.adoc#camel-github2-potential-breaking-change
 type: specs.openrewrite.org/v1beta/recipe

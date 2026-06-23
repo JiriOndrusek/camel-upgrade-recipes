@@ -55,6 +55,7 @@ public class CamelTestUtil {
         v4_16(4, 16, 0),
         v4_17(4, 17, 0),
         v4_18(4, 18, 0),
+        v4_18_1(4, 18, 1, true),
         v4_18_3(4, 18, 3, true),
         v4_19(4, 19, 0),
         v4_20(4, 20, 0),
@@ -161,6 +162,10 @@ public class CamelTestUtil {
     public static String getCamel410LtsVersion() {
         return getString(
                 "camel4.10.lts.version", "Could not determine 4.10 lts version from properties file.");
+    }
+    public static String getCamel418LtsVersion() {
+        return getString(
+                "camel4.18.lts.version", "Could not determine 4.18 lts version from properties file.");
     }
 
 

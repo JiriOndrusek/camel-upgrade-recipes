@@ -53,7 +53,6 @@ recipeList:
   - org.apache.camel.upgrade.camel421.upgradeJt400Headers
   - org.apache.camel.upgrade.camel421.upgradeMailHeaders
   - org.apache.camel.upgrade.camel421.upgradeMiloHeaders
-  - org.apache.camel.upgrade.camel421.upgradeElasticsearchHeaders
   - org.apache.camel.upgrade.camel421.upgradeOpensearchHeaders
   - org.apache.camel.upgrade.camel421.upgradeIrcHeaders
   - org.apache.camel.upgrade.camel421.RemoveReifierStrategyImport
