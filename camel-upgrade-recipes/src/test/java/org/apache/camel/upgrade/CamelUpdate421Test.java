@@ -36,7 +36,7 @@ public class CamelUpdate421Test implements RewriteTest {
         // Note: We load the full 4.21 recipe here, but each component recipe has
         // ModuleHasDependency preconditions that ensure only relevant recipes run
         // based on which dependencies are present in the test's pom.xml
-        CamelTestUtil.recipe(spec, CamelTestUtil.CamelVersion.v4_21)
+        CamelTestUtil.recipe(spec, CamelTestUtil.CamelVersion.v4_21, true)
                 .parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v4_20,
                         "camel-core-model", "camel-api", "s3"))
                 .typeValidationOptions(TypeValidation.none())

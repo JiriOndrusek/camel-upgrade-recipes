@@ -102,12 +102,19 @@ public class CamelTestUtil {
     }
 
     public static RecipeSpec recipe(RecipeSpec spec, CamelVersion to, String... activeRecipes) {
+        return recipe(spec, to, false, activeRecipes);
+    }
+    public static RecipeSpec recipe(RecipeSpec spec, CamelVersion to, boolean useAllRecipes, String... activeRecipes) {
         String useRecipe = System.getProperty(CamelTestUtil.PROPERTY_USE_RECIPE);
         if (useRecipe != null && !useRecipe.isEmpty()) {
             return spec.recipeFromResources(useRecipe);
         }
         if (activeRecipes == null || activeRecipes.length == 0) {
-            return spec.recipeFromResource(to.getYamlFile(), to.getRecipe());
+            if(useAllRecipes) {
+                return spec.recipeFromResources(to.getRecipe());
+            } else {
+                return spec.recipeFromResource(to.getYamlFile(), to.getRecipe());
+            }
         }
         return spec.recipeFromResource(to.getYamlFile(), activeRecipes);
     }
