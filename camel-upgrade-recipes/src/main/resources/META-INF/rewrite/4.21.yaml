@@ -63,7 +63,6 @@ recipeList:
   - org.apache.camel.upgrade.camel421.removeCamelGrapeDependency
   - org.apache.camel.upgrade.camel421.removeCamelElytronDependency
   - org.apache.camel.upgrade.camel421.removeCamelGithubDependency
-  - org.apache.camel.upgrade.camel421.migrateGrokDependency
   - org.apache.camel.upgrade.camel421.migrateAws2S3ListObjectsApi
   - org.apache.camel.upgrade.camel421.migrateErrorRegistryProperties
 ---
@@ -390,18 +389,6 @@ recipeList:
   - org.openrewrite.maven.RemoveDependency:
       groupId: org.apache.camel
       artifactId: camel-github
----
-## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#camel-grok-potential-breaking-change
-type: specs.openrewrite.org/v1beta/recipe
-name: org.apache.camel.upgrade.camel421.migrateGrokDependency
-displayName: Migrate camel-grok dependency to new library
-description: Migrates the Grok library from unmaintained io.krakens:java-grok to its active fork io.github.whatap:java-grok.
-recipeList:
-  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
-      oldGroupId: io.krakens
-      oldArtifactId: java-grok
-      newGroupId: io.github.whatap
-      newArtifactId: java-grok
 ---
 ## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_21.adoc#camel-aws2-s3
 type: specs.openrewrite.org/v1beta/recipe

@@ -501,36 +501,6 @@ public class CamelUpdate421Test implements RewriteTest {
     }
 
     @Test
-    void testMigrateGrokDependency() {
-        //language=xml
-        rewriteRun(
-                spec -> spec.expectedCyclesThatMakeChanges(1),
-                pomXml(
-                """
-                <project>
-                    <groupId>com.example</groupId>
-                    <artifactId>test</artifactId>
-                    <version>1.0.0</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>io.krakens</groupId>
-                            <artifactId>java-grok</artifactId>
-                            <version>0.1.9</version>
-                        </dependency>
-                    </dependencies>
-                </project>
-                """,
-                spec -> spec.after(after -> {
-                    assertThat(after).contains("<groupId>io.github.whatap</groupId>");
-                    assertThat(after).contains("<artifactId>java-grok</artifactId>");
-                    assertThat(after).doesNotContain("<groupId>io.krakens</groupId>");
-                    return after;
-                })
-                )
-        );
-    }
-
-    @Test
     void testMigrateAws2S3ListObjectsApi() {
         //language=java
         rewriteRun(

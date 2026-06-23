@@ -18,7 +18,7 @@ The following table lists migration topics and indicates the level of coverage (
 |===
 | Migration | Coverage | Comment
 
-| https://camel.apache.org/manual/camel-4x-upgrade-guide-4_21.html#camel-grok-potential-breaking-change[camel-grok Library Migration] | ✅ Full | Automated dependency migration: `io.krakens:java-grok` → `io.github.whatap:java-grok`
+| https://camel.apache.org/manual/camel-4x-upgrade-guide-4_21.html#camel-grok-potential-breaking-change[camel-grok Library Migration] | ❌ None | If `io.krakens:java-grok` is used outside the component, the code could not be migrated. If is used only via component, migration is not needed.
 | https://camel.apache.org/manual/camel-4x-upgrade-guide-4_21.html#camel-core[camel-api Null Safety Annotations] | ❌ None | Optional dependency, no migration required
 | https://camel.apache.org/manual/camel-4x-upgrade-guide-4_21.html#camel-core[DefaultHeaderFilterStrategy Lowercase Default] | ❌ None | Configuration default change, manual review required
 | https://camel.apache.org/manual/camel-4x-upgrade-guide-4_21.html#error-registry[Error Registry SPI Changes] | ⚠️ Partial | Property key migration automated for `.properties` files (`camel.main.errorRegistryXxx` → `camel.errorRegistry.*`). Type changes (`ErrorRegistryEntry` → `BacklogErrorEventMessage`) require manual migration. YAML files require manual migration.
