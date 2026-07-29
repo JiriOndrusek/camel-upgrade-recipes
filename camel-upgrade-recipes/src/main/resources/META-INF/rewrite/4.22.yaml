@@ -34,6 +34,7 @@ recipeList:
   - org.apache.camel.upgrade.camel422.migrateWeaviateClientType
   - org.apache.camel.upgrade.camel422.removeDebeziumOracleOptions
   - org.apache.camel.upgrade.camel422.removeResilience4jTimeoutPoolSize
+  - org.apache.camel.upgrade.camel422.migrateAwsApacheClient
 ---
 ## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_22.adoc#camel-azure---component-specific-credentialtype-enums-removed
 type: specs.openrewrite.org/v1beta/recipe
@@ -183,3 +184,18 @@ recipeList:
       propertyKey: camel.resilience4j.timeout-pool-size
   - org.openrewrite.properties.DeleteProperty:
       propertyKey: camel.resilience4j.timeoutPoolSize
+---
+## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_22.adoc#camel-aws---migrated-from-apache-client-to-apache5-client
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.camel422.migrateAwsApacheClient
+displayName: Migrate AWS SDK apache-client to apache5-client
+description: >-
+  All camel-aws modules now use software.amazon.awssdk:apache5-client (Apache HttpClient 5)
+  instead of software.amazon.awssdk:apache-client (Apache HttpClient 4), aligning with the
+  new default in AWS SDK for Java v2.46.0.
+recipeList:
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: software.amazon.awssdk
+      oldArtifactId: apache-client
+      newGroupId: software.amazon.awssdk
+      newArtifactId: apache5-client

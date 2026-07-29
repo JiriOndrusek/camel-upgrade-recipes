@@ -36,6 +36,10 @@ This is a release supporting Camel, Camel Quarkus and Camel Spring Boot 4.22.0 w
 |✅ Full
 |Removes `camel.resilience4j.timeout-pool-size` / `camel.resilience4j.timeoutPoolSize` from properties
 
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-aws-migrated-from-apache-client-to-apache5-client[camel-aws: apache-client → apache5-client]
+|✅ Full
+|`software.amazon.awssdk:apache-client` renamed to `software.amazon.awssdk:apache5-client` via `ChangeDependencyGroupIdAndArtifactId`
+
 |https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-jbang[camel-jbang: CLI enhancements]
 |❌ None
 |New features and behavioral changes only; no code migration required

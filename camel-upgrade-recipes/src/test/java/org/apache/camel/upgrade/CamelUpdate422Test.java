@@ -25,6 +25,7 @@ import org.openrewrite.test.TypeValidation;
 
 import static org.openrewrite.java.Assertions.java;
 import static org.openrewrite.java.Assertions.mavenProject;
+import static org.openrewrite.maven.Assertions.pomXml;
 import static org.openrewrite.properties.Assertions.properties;
 
 //class has to stay public, because test is extended in project quarkus-updates
@@ -72,6 +73,51 @@ public class CamelUpdate422Test implements RewriteTest {
                 camel.resilience4j.timeoutEnabled=true
                 """,
                 spec -> spec.path("application.properties")
+                )
+        );
+    }
+
+    // ===== camel-aws: apache-client → apache5-client =====
+
+    @Test
+    void migrateAwsApacheClient() {
+        //language=xml
+        rewriteRun(
+                pomXml(
+                """
+                <project>
+                    <groupId>com.example</groupId>
+                    <artifactId>test</artifactId>
+                    <version>1.0.0</version>
+                    <properties>
+                        <maven.compiler.release>17</maven.compiler.release>
+                    </properties>
+                    <dependencies>
+                        <dependency>
+                            <groupId>software.amazon.awssdk</groupId>
+                            <artifactId>apache-client</artifactId>
+                            <version>2.46.0</version>
+                        </dependency>
+                    </dependencies>
+                </project>
+                """,
+                """
+                <project>
+                    <groupId>com.example</groupId>
+                    <artifactId>test</artifactId>
+                    <version>1.0.0</version>
+                    <properties>
+                        <maven.compiler.release>17</maven.compiler.release>
+                    </properties>
+                    <dependencies>
+                        <dependency>
+                            <groupId>software.amazon.awssdk</groupId>
+                            <artifactId>apache5-client</artifactId>
+                            <version>2.46.0</version>
+                        </dependency>
+                    </dependencies>
+                </project>
+                """
                 )
         );
     }
