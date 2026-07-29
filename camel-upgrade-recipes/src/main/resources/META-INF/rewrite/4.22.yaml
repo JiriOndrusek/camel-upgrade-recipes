@@ -1,0 +1,185 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+#####
+# Rules coming from https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html
+#####
+
+#####
+# Update the Camel project from 4.21 to 4.22
+#####
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.camel422.CamelMigrationRecipe
+displayName: Migrates `camel 4.21` application to `camel 4.22`
+description: Migrates `camel 4.21` application to `camel 4.22`.
+recipeList:
+  - org.apache.camel.upgrade.camel422.migrateAzureCredentialType
+  - org.apache.camel.upgrade.camel422.migrateOpenAiChatCompletionType
+  - org.apache.camel.upgrade.camel422.migrateMinioTypes
+  - org.apache.camel.upgrade.camel422.migrateWeaviateClientType
+  - org.apache.camel.upgrade.camel422.removeDebeziumOracleOptions
+  - org.apache.camel.upgrade.camel422.removeResilience4jTimeoutPoolSize
+---
+## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_22.adoc#camel-azure---component-specific-credentialtype-enums-removed
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.camel422.migrateAzureCredentialType
+displayName: Migrate Azure component-specific CredentialType enums to shared type
+description: >-
+  Migrates the 10 component-specific CredentialType enums (removed in Camel 4.22,
+  deprecated since 4.19) to the shared org.apache.camel.component.azure.common.CredentialType.
+preconditions:
+  - org.openrewrite.java.dependencies.search.ModuleHasDependency:
+      groupIdPattern: org.apache.camel
+      artifactIdPattern: camel-azure-*
+recipeList:
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.camel.component.azure.cosmosdb.CredentialType
+      newFullyQualifiedTypeName: org.apache.camel.component.azure.common.CredentialType
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.camel.component.azure.eventgrid.CredentialType
+      newFullyQualifiedTypeName: org.apache.camel.component.azure.common.CredentialType
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.camel.component.azure.eventhubs.CredentialType
+      newFullyQualifiedTypeName: org.apache.camel.component.azure.common.CredentialType
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.camel.component.file.azure.CredentialType
+      newFullyQualifiedTypeName: org.apache.camel.component.azure.common.CredentialType
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.camel.component.azure.functions.CredentialType
+      newFullyQualifiedTypeName: org.apache.camel.component.azure.common.CredentialType
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.camel.component.azure.key.vault.CredentialType
+      newFullyQualifiedTypeName: org.apache.camel.component.azure.common.CredentialType
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.camel.component.azure.servicebus.CredentialType
+      newFullyQualifiedTypeName: org.apache.camel.component.azure.common.CredentialType
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.camel.component.azure.storage.blob.CredentialType
+      newFullyQualifiedTypeName: org.apache.camel.component.azure.common.CredentialType
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.camel.component.azure.storage.datalake.CredentialType
+      newFullyQualifiedTypeName: org.apache.camel.component.azure.common.CredentialType
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.camel.component.azure.storage.queue.CredentialType
+      newFullyQualifiedTypeName: org.apache.camel.component.azure.common.CredentialType
+---
+## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_22.adoc#camel-openai
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.camel422.migrateOpenAiChatCompletionType
+displayName: Migrate OpenAI ChatCompletion import to nested SDK class
+description: >-
+  Migrates the old com.openai.models.ChatCompletion import to the new
+  com.openai.models.chat.completions.ChatCompletion class used in Camel 4.22.
+preconditions:
+  - org.openrewrite.java.dependencies.search.ModuleHasDependency:
+      groupIdPattern: org.apache.camel
+      artifactIdPattern: camel-openai
+recipeList:
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: com.openai.models.ChatCompletion
+      newFullyQualifiedTypeName: com.openai.models.chat.completions.ChatCompletion
+---
+## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_22.adoc#camel-minio---upgraded-to-minio-903---breaking-changes
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.camel422.migrateMinioTypes
+displayName: Migrate Minio 8.x types to Minio 9.x API
+description: >-
+  Migrates removed Minio 8.x types to their Minio 9.x equivalents:
+  ServerSideEncryptionCustomerKey, CopySource, http.Method, messages.Bucket, and DeleteObject.
+preconditions:
+  - org.openrewrite.java.dependencies.search.ModuleHasDependency:
+      groupIdPattern: org.apache.camel
+      artifactIdPattern: camel-minio
+recipeList:
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: io.minio.ServerSideEncryptionCustomerKey
+      newFullyQualifiedTypeName: io.minio.ServerSideEncryption.CustomerKey
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: io.minio.CopySource
+      newFullyQualifiedTypeName: io.minio.SourceObject
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: io.minio.http.Method
+      newFullyQualifiedTypeName: io.minio.Http.Method
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: io.minio.messages.Bucket
+      newFullyQualifiedTypeName: io.minio.messages.ListAllMyBucketsResult.Bucket
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: io.minio.messages.DeleteObject
+      newFullyQualifiedTypeName: io.minio.messages.DeleteRequest.Object
+---
+## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_22.adoc#camel-weaviate---potential-breaking-change
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.camel422.migrateWeaviateClientType
+displayName: Migrate Weaviate client from v5 to v6 API
+description: >-
+  Migrates the autowired WeaviateClient from the removed io.weaviate.client.WeaviateClient (v5)
+  to io.weaviate.client6.v1.api.WeaviateClient (v6).
+preconditions:
+  - org.openrewrite.java.dependencies.search.ModuleHasDependency:
+      groupIdPattern: org.apache.camel
+      artifactIdPattern: camel-weaviate
+recipeList:
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: io.weaviate.client.WeaviateClient
+      newFullyQualifiedTypeName: io.weaviate.client6.v1.api.WeaviateClient
+---
+## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_22.adoc#camel-debezium
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.camel422.removeDebeziumOracleOptions
+displayName: Remove removed Debezium Oracle connector options
+description: >-
+  Removes the 10 Oracle connector options removed by Debezium 3.6.0 from application.properties files.
+  These options must be removed to avoid startup errors.
+preconditions:
+  - org.openrewrite.java.dependencies.search.ModuleHasDependency:
+      groupIdPattern: org.apache.camel
+      artifactIdPattern: camel-debezium-oracle
+recipeList:
+  - org.openrewrite.properties.DeleteProperty:
+      propertyKey: camel.component.debezium-oracle.log-mining-batch-size-default
+  - org.openrewrite.properties.DeleteProperty:
+      propertyKey: camel.component.debezium-oracle.log-mining-batch-size-increment
+  - org.openrewrite.properties.DeleteProperty:
+      propertyKey: camel.component.debezium-oracle.log-mining-batch-size-max
+  - org.openrewrite.properties.DeleteProperty:
+      propertyKey: camel.component.debezium-oracle.log-mining-batch-size-min
+  - org.openrewrite.properties.DeleteProperty:
+      propertyKey: camel.component.debezium-oracle.log-mining-sleep-time-default-ms
+  - org.openrewrite.properties.DeleteProperty:
+      propertyKey: camel.component.debezium-oracle.log-mining-sleep-time-increment-ms
+  - org.openrewrite.properties.DeleteProperty:
+      propertyKey: camel.component.debezium-oracle.log-mining-sleep-time-max-ms
+  - org.openrewrite.properties.DeleteProperty:
+      propertyKey: camel.component.debezium-oracle.log-mining-sleep-time-min-ms
+  - org.openrewrite.properties.DeleteProperty:
+      propertyKey: camel.component.debezium-oracle.log-mining-scn-gap-detection-gap-size-min
+  - org.openrewrite.properties.DeleteProperty:
+      propertyKey: camel.component.debezium-oracle.log-mining-scn-gap-detection-time-interval-max-ms
+---
+## https://github.com/apache/camel/blob/main/docs/user-manual/modules/ROOT/pages/camel-4x-upgrade-guide-4_22.adoc#camel-microprofile-fault-tolerance
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.camel422.removeResilience4jTimeoutPoolSize
+displayName: Remove removed resilience4j timeoutPoolSize configuration property
+description: >-
+  Removes the timeoutPoolSize option from Fault Tolerance (resilience4j) configuration,
+  which was never used and has been removed in Camel 4.22.
+recipeList:
+  - org.openrewrite.properties.DeleteProperty:
+      propertyKey: camel.resilience4j.timeout-pool-size
+  - org.openrewrite.properties.DeleteProperty:
+      propertyKey: camel.resilience4j.timeoutPoolSize
