@@ -609,6 +609,22 @@
                                     <outputDirectory>${rewrite-tmp-classpath}</outputDirectory>
                                 </artifactItem>
 
+                                <!-- Azure Storage Blob for Azure CredentialType migration tests -->
+                                <artifactItem>
+                                    <groupId>org.apache.camel</groupId>
+                                    <artifactId>camel-azure-storage-blob</artifactId>
+                                    <version>${camel4.18-version}</version>
+                                    <outputDirectory>${rewrite-tmp-classpath}</outputDirectory>
+                                </artifactItem>
+
+                                <!-- Minio 8.x for Minio type migration tests -->
+                                <artifactItem>
+                                    <groupId>io.minio</groupId>
+                                    <artifactId>minio</artifactId>
+                                    <version>8.5.7</version>
+                                    <outputDirectory>${rewrite-tmp-classpath}</outputDirectory>
+                                </artifactItem>
+
                                 <!-- AWS SDK S3 for camel-aws2-s3 type migration tests -->
                                 <artifactItem>
                                     <groupId>software.amazon.awssdk</groupId>

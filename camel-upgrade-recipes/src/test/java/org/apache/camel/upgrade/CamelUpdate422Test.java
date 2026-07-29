@@ -34,7 +34,7 @@ public class CamelUpdate422Test implements RewriteTest {
     public void defaults(RecipeSpec spec) {
         CamelTestUtil.recipe(spec, CamelTestUtil.CamelVersion.v4_22, true)
                 .parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v4_21,
-                        "camel-core-model", "camel-api", "camel-azure-storage-blob", "minio"))
+                        "camel-core-model", "camel-api", "camel-azure-storage-blob"))
                 .typeValidationOptions(TypeValidation.none())
                 .expectedCyclesThatMakeChanges(1);
     }
@@ -115,6 +115,8 @@ public class CamelUpdate422Test implements RewriteTest {
         //language=java
         // OpenRewrite resolves the inner class name to its simple form without the outer class qualifier
         rewriteRun(
+                spec -> spec.parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v4_21,
+                        "camel-core-model", "camel-api", "camel-azure-storage-blob", "minio")),
                 mavenProject("test-minio",
                         CamelTestUtil.pomXmlSpec("camel-minio", CamelTestUtil.CamelVersion.v4_21),
                         java(
@@ -144,6 +146,8 @@ public class CamelUpdate422Test implements RewriteTest {
         //language=java
         // OpenRewrite resolves io.minio.http.Method → io.minio.Http.Method using inner class simple name
         rewriteRun(
+                spec -> spec.parser(CamelTestUtil.parserFromClasspath(CamelTestUtil.CamelVersion.v4_21,
+                        "camel-core-model", "camel-api", "camel-azure-storage-blob", "minio")),
                 mavenProject("test-minio-method",
                         CamelTestUtil.pomXmlSpec("camel-minio", CamelTestUtil.CamelVersion.v4_21),
                         java(
