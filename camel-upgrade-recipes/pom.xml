@@ -617,6 +617,22 @@
                                     <outputDirectory>${rewrite-tmp-classpath}</outputDirectory>
                                 </artifactItem>
 
+                                <!-- Azure component JARs for CredentialType migration tests (4.22) -->
+                                <artifactItem>
+                                    <groupId>org.apache.camel</groupId>
+                                    <artifactId>camel-azure-storage-blob</artifactId>
+                                    <version>${camel4.18-version}</version>
+                                    <outputDirectory>${rewrite-tmp-classpath}</outputDirectory>
+                                </artifactItem>
+
+                                <!-- Minio client for minio type migration tests (4.22) -->
+                                <artifactItem>
+                                    <groupId>io.minio</groupId>
+                                    <artifactId>minio</artifactId>
+                                    <version>8.5.7</version>
+                                    <outputDirectory>${rewrite-tmp-classpath}</outputDirectory>
+                                </artifactItem>
+
                             </artifactItems>
                         </configuration>
                     </execution>

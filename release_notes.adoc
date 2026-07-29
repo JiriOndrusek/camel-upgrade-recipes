@@ -1,5 +1,337 @@
 = Camel Upgrade Recipes - Release notes
 
+== 4.22.0
+
+=== Summary
+
+This is a release supporting Camel, Camel Quarkus and Camel Spring Boot 4.22.0 with the required upgrade recipes (described by the https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html[migration guide]).
+
+=== Migration coverage
+
+The following table lists migration topics and indicates the level of coverage (full, partial, or not covered), along with additional comments.
+
+[%autowidth,stripes=hover]
+|===
+| Migration | Coverage | Comment
+
+| camel-azure: component-specific CredentialType enums removed
+| ✅ Full
+| Automated via `ChangeType` for all 10 component-specific enums → `org.apache.camel.component.azure.common.CredentialType`
+
+| camel-openai: ChatCompletion type moved
+| ❌ None
+| `ChangeType` recipe cannot be tested — OpenAI SDK JAR not available on test classpath. Requires manual migration.
+
+| camel-aws: apache-client → apache5-client
+| ✅ Full
+| Automated via `ChangeDependencyGroupIdAndArtifactId` for `software.amazon.awssdk:apache-client` → `software.amazon.awssdk:apache5-client`
+
+| camel-minio: type renames (minio 8.x → 9.0)
+| ⚠️ Partial
+| `CopySource` → `SourceObject` automated via `ChangeType`. Inner class renames (`ServerSideEncryptionCustomerKey` → `ServerSideEncryption.CustomerKey`, `http.Method` → `Http.Method`, `messages.Bucket` → `ListAllMyBucketsResult.Bucket`, `DeleteObject` → `DeleteRequest.Object`) not automatable — OpenRewrite `ChangeType` to inner classes is not idempotent. Requires manual migration.
+
+| camel-jbang
+| ❌ None
+| CLI/TUI runtime changes, new commands, installer scripts — not automatable
+
+| camel-langchain4j-agent: Agent.chat() return type changed
+| ❌ None
+| Complex API change from `String` to `Result<String>`, requires manual update
+
+| camel-langchain4j-agent: tool routes `langchain4j-tools:` → `ai-tool:`
+| ❌ None
+| URI scheme change in route definitions, would require custom recipe
+
+| camel-langchain4j-agent: exchange isolation for route tools
+| ❌ None
+| Behavioral change
+
+| camel-langchain4j-chat: helper builder classes removed
+| ❌ None
+| No direct replacement
+
+| camel-langchain4j-tools: bounded tool-calling rounds
+| ❌ None
+| New default behavior (max 10 rounds)
+
+| camel-langchain4j-tools: hallucinated tool names handled
+| ❌ None
+| Behavioral fix
+
+| camel-langchain4j-tools: tool errors sent to LLM
+| ❌ None
+| Behavioral change
+
+| camel-langchain4j-web-search: safeSearch fix
+| ❌ None
+| Bug fix
+
+| camel-openai: token headers Integer → Long
+| ❌ None
+| Runtime type change
+
+| camel-openai: ChatCompletion exchange property javaType updated
+| ❌ None
+| Not covered — ChatCompletion type migration removed (see above)
+
+| camel-openai: conversationMemory fixes
+| ❌ None
+| Behavioral fix
+
+| camel-openai: new `responses` operation
+| ❌ None
+| New feature
+
+| camel-management: Throughput EWMA smoothing
+| ❌ None
+| Behavioral change
+
+| camel-azure-servicebus: Camel-managed lock renewal
+| ❌ None
+| Auto-activating, no configuration changes required
+
+| camel-debezium: Oracle connector options removed
+| ❌ None
+| Endpoint configuration options, not easily automatable
+
+| camel-spring-ai-chat: tool routes `spring-ai-tools:` → `ai-tool:`
+| ❌ None
+| URI scheme change in route definitions, would require custom recipe
+
+| camel-pqc: AEAD encryption
+| ❌ None
+| Wire format change, not automatable
+
+| camel-file / camel-ftp / camel-azure-files / camel-smb: preSort option enhanced
+| ❌ None
+| Backward compatible (`true` still works as alias for `name`)
+
+| camel-file: forceWrites option deprecated
+| ❌ None
+| Deprecation only
+
+| camel-mail: MimeMultipartDataFormat header filtering
+| ❌ None
+| Behavioral change
+
+| camel-knative: CloudEvent header filtering
+| ❌ None
+| Behavioral change
+
+| camel-ironmq: message envelope header filtering
+| ❌ None
+| Behavioral change
+
+| camel-pinecone: tls default documentation fix
+| ❌ None
+| Documentation fix only
+
+| camel-platform-http-main: prod profile auth enforcement
+| ❌ None
+| Behavioral change
+
+| camel-kafka: metadataMaxAgeMs moved to common
+| ❌ None
+| DSL builder method change
+
+| camel-kafka: saslAuthType behavior changes
+| ❌ None
+| Behavioral change
+
+| camel-kafka: scalar Jackson nodes no longer dropped
+| ❌ None
+| Bug fix
+
+| camel-kafka: sslEndpointAlgorithm=none fix
+| ❌ None
+| Bug fix
+
+| camel-kafka: auto-generated groupId shared
+| ❌ None
+| Bug fix
+
+| camel-kafka: batch producer key fix
+| ❌ None
+| Bug fix
+
+| camel-kafka: queueBufferingMaxMessages deprecated
+| ❌ None
+| Deprecation only
+
+| camel-kafka: manual commit no longer auto-commits
+| ❌ None
+| Behavioral change
+
+| camel-kafka: batch exchange topic/partition headers
+| ❌ None
+| Additive (new headers)
+
+| camel-kafka: unified reconnection task
+| ❌ None
+| Deprecation of subscribe backoff options
+
+| camel-jbang: catalog table width
+| ❌ None
+| CLI display change
+
+| camel-jsonpath: writeAsString fix
+| ❌ None
+| Bug fix
+
+| camel-aws2-kinesis: fixed-shardId consumer optimization
+| ❌ None
+| Transparent improvement
+
+| camel-aws2-kinesis: per-record partition keys
+| ❌ None
+| New feature
+
+| camel-azure-storage-blob / datalake: download containment
+| ❌ None
+| Security fix
+
+| camel-azure-storage-blob: page-blob range fix
+| ❌ None
+| Bug fix
+
+| camel-xmpp: Smack 4.4 upgrade
+| ❌ None
+| Third-party API change
+
+| camel-weaviate: v5 → v6 upgrade
+| ❌ None
+| Major API change with multiple breaking changes
+
+| camel-spring-boot: Duration configuration properties
+| ❌ None
+| Backward compatible (plain numerics still work)
+
+| camel-spring-rabbitmq: replyTimeout default aligned
+| ❌ None
+| Default value change
+
+| camel-spring-rabbitmq: queue durable default changed
+| ❌ None
+| Default value change
+
+| camel-core: additional sensitive keywords redacted
+| ❌ None
+| Cosmetic change to sanitized output
+
+| camel-support: DefaultMaskingFormatter enhancements
+| ❌ None
+| Cosmetic change to masked output
+
+| camel-a2a: push notification pinned to validated address
+| ❌ None
+| Security fix
+
+| camel-core: Multicast UseOriginalAggregationStrategy fix
+| ❌ None
+| Bug fix
+
+| camel-sql: PostgreSQL aggregation repositories fixed
+| ❌ None
+| Bug fix
+
+| camel-sql: schema-qualified aggregation names
+| ❌ None
+| Enhancement
+
+| camel-sql: new exceptions from aggregation
+| ❌ None
+| Behavioral change
+
+| camel-aws-cloudtrail: consumer event delivery fixed
+| ❌ None
+| Bug fix
+
+| camel-aws2-kinesis: KinesisResumeAction requires no-arg constructor
+| ❌ None
+| Behavioral change
+
+| camel-aws2-sqs: per-message delay skipped for delay/FIFO queues
+| ❌ None
+| Behavioral change
+
+| camel-xslt-saxon: secure processing applied unconditionally
+| ❌ None
+| Security enhancement
+
+| camel-core: InMemorySagaCoordinator fix
+| ❌ None
+| Behavioral change
+
+| camel-azure-eventhubs: producer header filtering
+| ❌ None
+| Behavioral change
+
+| camel-azure-storage-datalake: openInputStream change
+| ❌ None
+| Implementation change
+
+| camel-bindy: BigDecimal precision default changed
+| ❌ None
+| Behavioral change
+
+| camel-xslt / camel-xslt-saxon: transformerFactoryConfigurationStrategy fix
+| ❌ None
+| Bug fix
+
+| Circuit Breaker EIP: onFallbackViaNetwork deprecated
+| ❌ None
+| Deprecation only
+
+| camel-resilience4j: Duration options format change
+| ❌ None
+| Complex value conversion (seconds → milliseconds)
+
+| camel-resilience4j: Vavr dependency removed
+| ❌ None
+| Internal change
+
+| camel-resilience4j: JMX unit change
+| ❌ None
+| Behavioral change
+
+| camel-microprofile-fault-tolerance: timeoutPoolSize removed
+| ❌ None
+| Unused option removed
+
+| camel-microprofile-fault-tolerance: FailureRate → FailureRatio
+| ❌ None
+| JMX attribute rename
+
+| camel-clickhouse (new component)
+| ❌ None
+| New component
+
+| camel-duckdb (new component)
+| ❌ None
+| New component
+
+| camel-minio: MinioClient exception changes
+| ❌ None
+| Exception handling change
+
+| camel-aws2: producers fail fast on wrong POJO request type
+| ❌ None
+| Behavioral change
+
+| camel-google-storage: download containment
+| ❌ None
+| Security fix
+
+| camel-main: JWT requires issuer or audience
+| ❌ None
+| Behavioral change
+
+| camel-pqc: String payloads signed as UTF-8
+| ❌ None
+| Behavioral change
+
+|===
+
 == 4.21.0
 
 === Summary
