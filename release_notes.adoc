@@ -8,119 +8,65 @@ This is a release supporting Camel, Camel Quarkus and Camel Spring Boot 4.22.0 w
 
 === Migration coverage
 
-[cols="3,1,3"]
+The following table lists migration topics in the same order as the https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html[migration guide] and indicates the level of coverage (full, partial, or not covered), along with additional comments.
+
+[%autowidth,stripes=hover]
 |===
 |Migration |Coverage |Comment
 
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-azure-component-specific-credentialtype-enums-removed[camel-azure: component-specific CredentialType enums removed]
-|✅ Full
-|Automated via `ChangeType` for all 10 removed enums → `org.apache.camel.component.azure.common.CredentialType`
-
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-openai[camel-openai: ChatCompletion import rename]
-|✅ Full
-|`com.openai.models.ChatCompletion` → `com.openai.models.chat.completions.ChatCompletion`
-
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-minio-upgraded-to-minio-903-breaking-changes[camel-minio: Upgraded to minio 9.0.3]
-|✅ Full
-|`ChangeType` for `ServerSideEncryptionCustomerKey`, `CopySource`, `http.Method`, `messages.Bucket`, `messages.DeleteObject`
-
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-weaviate-potential-breaking-change[camel-weaviate: Client type changed to v6]
-|✅ Full
-|`io.weaviate.client.WeaviateClient` → `io.weaviate.client6.v1.api.WeaviateClient`
-
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-debezium[camel-debezium: 10 Oracle connector options removed]
-|✅ Full
-|Removes 10 removed Oracle options from `application.properties` via `DeleteProperty`
-
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-microprofile-fault-tolerance[camel-microprofile-fault-tolerance: timeoutPoolSize removed]
-|✅ Full
-|Removes `camel.resilience4j.timeout-pool-size` / `camel.resilience4j.timeoutPoolSize` from properties
-
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-aws-migrated-from-apache-client-to-apache5-client[camel-aws: apache-client → apache5-client]
-|✅ Full
-|`software.amazon.awssdk:apache-client` renamed to `software.amazon.awssdk:apache5-client` via `ChangeDependencyGroupIdAndArtifactId`
-
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-jbang[camel-jbang: CLI enhancements]
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-jbang[camel-jbang: CLI/TUI enhancements, launcher, installers]
 |❌ None
 |New features and behavioral changes only; no code migration required
 
 |https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-langchain4j-agent[camel-langchain4j-agent: Agent.chat() return type String → Result<String>]
 |❌ None
-|Custom interface implementation change — migration varies per user code
+|API return type change; requires manual update of custom `Agent` implementations
 
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-langchain4j-agent[camel-langchain4j-agent: route tools switch from langchain4j-tools: to ai-tool:]
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-route-tools-now-use-ai-tool[camel-langchain4j-agent: route tools switch from langchain4j-tools: to ai-tool:]
 |❌ None
-|URI DSL change — pattern too ambiguous for safe automation
+|URI scheme change in route definitions; requires context-aware DSL parsing
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#exchange-isolation-for-camel-route-tools[camel-langchain4j-agent: Exchange isolation for Camel route tools]
+|❌ None
+|Behavioral change
 
 |https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-langchain4j-chat[camel-langchain4j-chat: OpenAiChatLanguageModelBuilder / HuggingFaceChatLanguageModelBuilder removed]
 |❌ None
-|Removed helpers — manual reconfiguration via LangChain4j builders required
+|Helpers removed; replace with LangChain4j's own builders or Spring Boot starters
 
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-langchain4j-tools[camel-langchain4j-tools: maxToolCallingRoundTrips default changed]
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#tool-calling-round-trips-now-bounded-by-default[camel-langchain4j-tools: maxToolCallingRoundTrips default changed]
 |❌ None
 |Behavioral change only
 
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-spring-ai-chat[camel-spring-ai-chat: route tools switch from spring-ai-tools: to ai-tool:]
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#hallucinated-tool-names-no-longer-crash-the-producer[camel-langchain4j-tools: Hallucinated tool names no longer crash the producer]
 |❌ None
-|URI DSL change — pattern too ambiguous for safe automation
+|Behavioral fix
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#tool-execution-errors-sent-to-llm-instead-of-propagating-to-the-route[camel-langchain4j-tools: Tool execution errors sent to LLM]
+|❌ None
+|Behavioral change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-langchain4j-web-search[camel-langchain4j-web-search: safeSearch fix]
+|❌ None
+|Bug fix
 
 |https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-openai[camel-openai: token usage headers javaType Integer → Long]
 |❌ None
-|Read-side only; usage patterns too varied for safe automation
+|Type change in header metadata; requires manual update of `Integer.class` casts to `Long.class`
 
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-kafka-metadataMaxAgeMs-option-moved-from-producer-to-common[camel-kafka: metadataMaxAgeMs moved from producer to common builder]
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-openai[camel-openai: ChatCompletion import rename]
+|✅ Full
+|`com.openai.models.ChatCompletion` → `com.openai.models.chat.completions.ChatCompletion`
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-openai[camel-openai: conversationMemory fixes]
 |❌ None
-|Endpoint DSL builder method move — context-dependent, cannot be safely automated
+|Behavioral fix
 
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-kafka-saslAuthType-behavior-changes[camel-kafka: saslAuthType behavior changes]
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-openai[camel-openai: new `responses` operation]
 |❌ None
-|Behavioral change in JAAS config generation
+|New feature
 
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-kafka-subscribeConsumerBackoffMaxAttempts[camel-kafka: subscribeConsumerBackoffMaxAttempts / subscribeConsumerBackoffInterval deprecated]
-|❌ None
-|Config deprecation with behavioral change; migrate to createConsumerBackoff* options manually
-
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-kafka-queueBufferingMaxMessages-option-deprecated[camel-kafka: queueBufferingMaxMessages deprecated]
-|❌ None
-|Deprecation only; no replacement rename
-
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-resilience4j-duration-options-now-use-camel-duration-format[camel-resilience4j: Duration options use Camel duration format]
-|❌ None
-|String format change; existing numeric values still valid
-
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-resilience4j-vavr-dependency-removed[camel-resilience4j: Vavr dependency removed]
-|❌ None
-|Library dependency change; affects only direct Vavr usage alongside resilience4j
-
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#circuit-breaker-eip-onfallbackvianetwork-deprecated[Circuit Breaker EIP: onFallbackViaNetwork deprecated]
-|❌ None
-|Deprecation only
-
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-pqc-potential-breaking-change[camel-pqc: Wire format changed to AEAD]
-|❌ None
-|Data format wire change; re-encrypt data at rest manually
-
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-file-camel-ftp-camel-azure-files-camel-smb-preSort-option-enhanced[camel-file: preSort boolean → String]
-|❌ None
-|`true`/`false` values remain valid; new string values added
-
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-file-forceWrites-option-deprecated[camel-file: forceWrites option deprecated]
-|❌ None
-|Deprecation; option had no effect since Camel 2.20
-
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-spring-boot-duration-configuration-properties[camel-spring-boot: Duration configuration properties]
-|❌ None
-|Source-incompatible for programmatic readers only; numeric property values still valid
-
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-spring-rabbitmq-replytimeout-default-aligned[camel-spring-rabbitmq: replyTimeout default aligned]
-|❌ None
-|Default behavior change; set `replyTimeout=5000` explicitly if 5s timeout was required
-
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-spring-rabbitmq-queue-durable-default-changed-to-true[camel-spring-rabbitmq: queue durable default changed to true]
-|❌ None
-|Default behavior change; set `arg.queue.durable=false&arg.queue.exclusive=true` explicitly if needed
-
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-management-throughput-mbean-attribute-uses-ewma-smoothing[camel-management: Throughput MBean uses EWMA]
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-management-throughput-mbean-attribute-uses-ewma-smoothing[camel-management: Throughput MBean uses EWMA smoothing]
 |❌ None
 |JMX attribute behavior change; cosmetic/monitoring only
 
@@ -128,13 +74,285 @@ This is a release supporting Camel, Camel Quarkus and Camel Spring Boot 4.22.0 w
 |❌ None
 |New behavior activates automatically; no code changes required
 
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-weaviate-potential-breaking-change[camel-weaviate: proxyHost/proxyPort/proxyScheme options removed]
-|❌ None
-|Endpoint option removal; no Java type to automate
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-azure-component-specific-credentialtype-enums-removed[camel-azure: component-specific CredentialType enums removed]
+|✅ Full
+|Automated via `ChangeType` for all 10 removed enums → `org.apache.camel.component.azure.common.CredentialType`
 
-|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-xmpp-smack-upgraded-to-44[camel-xmpp: Smack upgraded to 4.4]
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-debezium[camel-debezium: 10 Oracle connector options removed]
+|✅ Full
+|Removes 10 removed Oracle options from `application.properties` via `DeleteProperty`
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-spring-ai-chat[camel-spring-ai-chat: route tools switch from spring-ai-tools: to ai-tool:]
 |❌ None
-|Smack internal type removal; not exposed via Camel API
+|URI scheme change in route definitions; requires context-aware DSL parsing
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-pqc-potential-breaking-change[camel-pqc: Wire format changed to AEAD]
+|❌ None
+|Data format wire change; re-encrypt data at rest manually
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-file-camel-ftp-camel-azure-files-camel-smb-presort-option-enhanced[camel-file / camel-ftp / camel-azure-files / camel-smb: preSort boolean → String]
+|❌ None
+|`true`/`false` values remain valid; new string values added
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-file-forcewrites-option-deprecated[camel-file: forceWrites option deprecated]
+|❌ None
+|Deprecation; option had no effect since Camel 2.20
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-mail-mimemultipartdataformat-inbound-header-filtering[camel-mail: MimeMultipartDataFormat inbound header filtering]
+|❌ None
+|Behavioral change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-knative-structured-mode-cloudevent-header-filtering[camel-knative: structured-mode CloudEvent header filtering]
+|❌ None
+|Behavioral change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-ironmq-message-envelope-header-filtering[camel-ironmq: message envelope header filtering]
+|❌ None
+|Behavioral change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-pinecone[camel-pinecone: tls default documentation fix]
+|❌ None
+|Documentation fix only
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-platform-http-main[camel-platform-http-main: prod profile auth enforcement]
+|❌ None
+|Behavioral change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-kafka-metadatamaxagems-option-moved-from-producer-to-common[camel-kafka: metadataMaxAgeMs moved from producer to common]
+|❌ None
+|Endpoint DSL method moved from producer to common builder; affects only programmatic DSL usage
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-kafka-saslauthtype-behavior-changes[camel-kafka: saslAuthType behavior changes]
+|❌ None
+|Behavioral change in JAAS config generation
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-kafka-producer-no-longer-silently-drops-scalar-jackson-nodes[camel-kafka: scalar Jackson nodes no longer dropped]
+|❌ None
+|Bug fix
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-kafka-sslendpointalgorithmnone-now-disables-hostname-verification[camel-kafka: sslEndpointAlgorithm=none fix]
+|❌ None
+|Bug fix
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-kafka-auto-generated-groupid-shared-across-consumer-threads[camel-kafka: auto-generated groupId shared across consumer threads]
+|❌ None
+|Bug fix
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-kafka-batch-producer-respects-endpoint-key-for-plain-list-elements[camel-kafka: batch producer respects endpoint key]
+|❌ None
+|Bug fix
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-kafka-queuebufferingmaxmessages-option-deprecated[camel-kafka: queueBufferingMaxMessages deprecated]
+|❌ None
+|Deprecation only; no replacement rename
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-kafka-manual-commit-no-longer-auto-commits-offsets[camel-kafka: manual commit no longer auto-commits offsets]
+|❌ None
+|Behavioral change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-jbang-catalog-tables-fill-the-terminal-width[camel-jbang: catalog tables fill terminal width]
+|❌ None
+|CLI display change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-jsonpath[camel-jsonpath: writeAsString fix]
+|❌ None
+|Bug fix
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-aws2-kinesis-fixed-shardid-consumer-no-longer-calls-describestream-on-every-poll[camel-aws2-kinesis: fixed-shardId consumer optimization]
+|❌ None
+|Transparent improvement
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-aws2-kinesis-per-record-partition-keys-in-batch-producer[camel-aws2-kinesis: per-record partition keys in batch producer]
+|❌ None
+|New feature
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-azure-storage-blob-camel-azure-storage-datalake-download-contained-within-filedir[camel-azure-storage-blob / datalake: download contained within fileDir]
+|❌ None
+|Security fix
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-xmpp-smack-upgraded-to-4-4[camel-xmpp: Smack upgraded to 4.4]
+|❌ None
+|Third-party API change; not exposed via Camel API
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#client-type-changed[camel-weaviate: Client type changed to v6]
+|✅ Full
+|`io.weaviate.client.WeaviateClient` → `io.weaviate.client6.v1.api.WeaviateClient`
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#scheme-default-value[camel-weaviate: scheme default value changed]
+|❌ None
+|Default changed to `http`; routes relying on no default must set `scheme` explicitly
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#collection-name-case-sensitivity[camel-weaviate: collection name case sensitivity (PascalCase required)]
+|❌ None
+|Weaviate v6 requires PascalCase collection names; case convention in URI strings not safely automatable
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#new-grpc-configuration-options[camel-weaviate: new gRPC configuration options]
+|❌ None
+|New feature
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#response-body-types-changed[camel-weaviate: response body types changed]
+|❌ None
+|`Result<T>` wrappers removed and return types changed; requires manual cast/type updates
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#readiness-check-removed[camel-weaviate: readiness check removed]
+|❌ None
+|Behavioral change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#proxy-configuration-removed[camel-weaviate: proxyHost/proxyPort/proxyScheme options removed]
+|❌ None
+|Options removed in v6 client with no replacement; requires manual architecture change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#new-operations[camel-weaviate: new operations (BATCH_CREATE, HYBRID_QUERY, BM25_QUERY, AGGREGATE)]
+|❌ None
+|New feature
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-spring-boot-duration-configuration-properties[camel-spring-boot: Duration configuration properties]
+|❌ None
+|Source-incompatible for programmatic readers only; numeric property values still valid
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-spring-rabbitmq-replytimeout-default-aligned[camel-spring-rabbitmq: replyTimeout default aligned]
+|❌ None
+|Default behavior change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-spring-rabbitmq-queue-durable-default-changed-to-true[camel-spring-rabbitmq: queue durable default changed to true]
+|❌ None
+|Default behavior change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-core-additional-sensitive-keywords-redacted-from-sanitized-uris[camel-core: additional sensitive keywords redacted from sanitized URIs]
+|❌ None
+|Cosmetic change to sanitized output
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-support-defaultmaskingformatter-masks-uri-userinfo-and-pem-private-keys[camel-support: DefaultMaskingFormatter masks URI userinfo and PEM keys]
+|❌ None
+|Cosmetic change to masked output
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-a2a-push-notification-webhooks-pinned-to-the-validated-address[camel-a2a: push notification webhooks pinned to validated address]
+|❌ None
+|Security fix
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-kafka-batch-exchange-carries-the-batch-wide-topic-and-partition[camel-kafka: batch exchange carries batch-wide topic and partition]
+|❌ None
+|Additive (new headers)
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-kafka-unified-reconnection-task[camel-kafka: unified reconnection task (subscribeConsumerBackoff* deprecated)]
+|❌ None
+|Deprecated options; migrate `subscribeConsumerBackoff*` to `createConsumerBackoff*` manually
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-core-multicast-useoriginalaggregationstrategy-fix[camel-core: Multicast UseOriginalAggregationStrategy fix]
+|❌ None
+|Bug fix
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-sql-postgresql-aggregation-repositories-fixed[camel-sql: PostgreSQL aggregation repositories fixed]
+|❌ None
+|Bug fix
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-pqc-string-payloads-are-signed-and-verified-as-utf-8[camel-pqc: String payloads signed as UTF-8]
+|❌ None
+|Behavioral change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-sql-schema-qualified-aggregation-repository-names[camel-sql: schema-qualified aggregation repository names]
+|❌ None
+|Enhancement
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-sql-new-exceptions-from-aggregation-and-template-parsing[camel-sql: new exceptions from aggregation and template parsing]
+|❌ None
+|Behavioral change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-aws-migrated-from-apache-client-to-apache5-client[camel-aws: apache-client → apache5-client]
+|✅ Full
+|`software.amazon.awssdk:apache-client` renamed to `software.amazon.awssdk:apache5-client` via `ChangeDependencyGroupIdAndArtifactId`
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-aws-cloudtrail-consumer-event-delivery-fixed[camel-aws-cloudtrail: consumer event delivery fixed]
+|❌ None
+|Bug fix
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-aws2-kinesis-custom-kinesisresumeaction-requires-a-public-no-arg-constructor[camel-aws2-kinesis: KinesisResumeAction requires no-arg constructor]
+|❌ None
+|Behavioral change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-aws2-sqs-per-message-delay-skipped-for-delay-queues-and-fifo-queues[camel-aws2-sqs: per-message delay skipped for delay/FIFO queues]
+|❌ None
+|Behavioral change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-xslt-saxon-secure-processing-now-applied-unconditionally[camel-xslt-saxon: secure processing applied unconditionally]
+|❌ None
+|Security enhancement
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-core-inmemorysagacoordinator-now-propagates-finalization-outcome[camel-core: InMemorySagaCoordinator propagates finalization outcome]
+|❌ None
+|Behavioral change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-azure-eventhubs-producer-now-filters-camel-internal-headers[camel-azure-eventhubs: producer header filtering]
+|❌ None
+|Behavioral change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-azure-storage-datalake-openinputstream-no-longer-uses-blob-query-api[camel-azure-storage-datalake: openInputStream no longer uses Blob Query API]
+|❌ None
+|Implementation change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-azure-storage-blob-page-blob-range-calculation-corrected[camel-azure-storage-blob: page-blob range calculation corrected]
+|❌ None
+|Bug fix
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-bindy-bigdecimal-precision-default-changed[camel-bindy: BigDecimal precision default changed]
+|❌ None
+|Behavioral change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-xslt-camel-xslt-saxon-transformerfactoryconfigurationstrategy-now-honored[camel-xslt / camel-xslt-saxon: transformerFactoryConfigurationStrategy fix]
+|❌ None
+|Bug fix
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#circuit-breaker-eip-onfallbackvianetwork-deprecated[Circuit Breaker EIP: onFallbackViaNetwork deprecated]
+|❌ None
+|Deprecation only
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-resilience4j-duration-options-now-use-camel-duration-format[camel-resilience4j: Duration options use Camel duration format]
+|❌ None
+|Type changed from `Integer` (seconds) to `String` (duration); requires manual value conversion
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-resilience4j-vavr-dependency-removed[camel-resilience4j: Vavr dependency removed]
+|❌ None
+|Internal change; affects only direct Vavr usage alongside resilience4j
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-resilience4j-jmx-waitdurationinopenstate-now-reports-milliseconds[camel-resilience4j: JMX waitDurationInOpenState now reports milliseconds]
+|❌ None
+|Behavioral change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-microprofile-fault-tolerance[camel-microprofile-fault-tolerance: timeoutPoolSize removed]
+|✅ Full
+|Removes `camel.resilience4j.timeout-pool-size` / `camel.resilience4j.timeoutPoolSize` from properties
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-microprofile-fault-tolerance[camel-microprofile-fault-tolerance: FailureRate renamed to FailureRatio]
+|❌ None
+|JMX attribute rename
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-clickhouse-new-component[camel-clickhouse (new component)]
+|❌ None
+|New component
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-duckdb-new-component[camel-duckdb (new component)]
+|❌ None
+|New component
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-minio-upgraded-to-minio-9-0-3-breaking-changes[camel-minio: type renames (minio 8.x → 9.0)]
+|✅ Full
+|`ChangeType` for `ServerSideEncryptionCustomerKey`, `CopySource`, `http.Method`, `messages.Bucket`, `messages.DeleteObject`
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#minioclient-methods-now-throw-minioexception-only[camel-minio: MinioClient methods now throw MinioException only]
+|❌ None
+|Exception handling change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-aws2-producers-now-fail-fast-on-a-wrong-pojo-request-type[camel-aws2: producers fail fast on wrong POJO request type]
+|❌ None
+|Behavioral change
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-google-storage-downloads-are-confined-to-the-configured-directory[camel-google-storage: downloads confined to configured directory]
+|❌ None
+|Security fix
+
+|https://camel.apache.org/manual/camel-4x-upgrade-guide-4_22.html#camel-main-jwt-authentication-requires-an-issuer-or-an-audience[camel-main: JWT requires issuer or audience]
+|❌ None
+|Behavioral change
 
 |===
 
