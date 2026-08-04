@@ -46,6 +46,19 @@ $ mvn -U org.openrewrite.maven:rewrite-maven-plugin:run -Drewrite.recipeArtifact
 ```
 
 
+== Citrus 4.x to 5.x migration
+
+A standalone recipe is available for projects using the https://citrusframework.org/[Citrus] testing framework with Camel.
+It covers the Camel-specific changes in Citrus 5.0 (JBang-to-CLI rename, artifact renames) but does not cover general Citrus package renames unrelated to Camel.
+
+This recipe is **not** included in the Camel version migration chain — run it manually when upgrading Citrus:
+
+```
+$ mvn -U org.openrewrite.maven:rewrite-maven-plugin:run -Drewrite.recipeArtifactCoordinates=org.apache.camel.upgrade:camel-upgrade-recipes:LATEST -Drewrite.activeRecipes=org.apache.camel.upgrade.citrus5.CamelCitrusMigrationRecipe
+```
+
+== Applying specific recipes
+
 To apply specific recipes you can use the following script:
 
 ```
