@@ -1,0 +1,139 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+#####
+# Citrus 4.x to 5.x migration recipes (Camel-related changes only)
+# Source: https://github.com/citrusframework/citrus/wiki/Migration-guide:-Citrus-4.x-to-5.x
+#
+# This is a standalone recipe, not chained into any Camel version migration.
+# Run manually when upgrading Citrus 4.x to 5.x in a Camel project.
+#####
+
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.citrus5.CamelCitrusMigrationRecipe
+displayName: Migrates Camel-Citrus integration from Citrus 4.x to 5.x
+description: Migrates Camel-related Citrus code from Citrus 4.x to 5.x. Covers the JBang to CLI rename and artifact renames.
+recipeList:
+  - org.apache.camel.upgrade.citrus5.citrusArtifactRename
+  - org.apache.camel.upgrade.citrus5.camelCliClassRenames
+  - org.apache.camel.upgrade.citrus5.camelCliMethodRename
+  - org.apache.camel.upgrade.citrus5.camelCliXmlDsl
+  - org.apache.camel.upgrade.citrus5.camelCliYamlDsl
+  - org.apache.camel.upgrade.citrus5.camelCliProperties
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.citrus5.citrusArtifactRename
+displayName: Rename citrus-junit5 to citrus-junit-jupiter
+description: The citrus-junit5 artifact has been renamed to citrus-junit-jupiter in Citrus 5.0.
+recipeList:
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: org.citrusframework
+      oldArtifactId: citrus-junit5
+      newGroupId: org.citrusframework
+      newArtifactId: citrus-junit-jupiter
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.citrus5.camelCliClassRenames
+displayName: Rename CamelJBang classes to CamelCli
+description: Citrus 5.0 renamed JBang integration classes to CLI.
+recipeList:
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.citrusframework.camel.jbang.CamelJBang
+      newFullyQualifiedTypeName: org.citrusframework.camel.cli.CamelCli
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.citrusframework.camel.jbang.CamelJBangSettings
+      newFullyQualifiedTypeName: org.citrusframework.camel.cli.CamelCliSettings
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.citrusframework.camel.jbang.CamelJBangTestActor
+      newFullyQualifiedTypeName: org.citrusframework.camel.cli.CamelCliTestActor
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.citrusframework.camel.actions.AbstractCamelJBangAction
+      newFullyQualifiedTypeName: org.citrusframework.camel.actions.AbstractCamelCliAction
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.citrus5.camelCliMethodRename
+displayName: Rename jbang() to cli() in Java DSL
+description: The jbang() method on CamelSupport/CamelActionBuilder is renamed to cli() in Citrus 5.0.
+recipeList:
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: org.citrusframework.camel.dsl.CamelSupport jbang()
+      newMethodName: cli
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.citrus5.camelCliXmlDsl
+displayName: Rename jbang to cli in XML DSL
+description: Replace jbang XML element with cli in Citrus Camel XML DSL.
+recipeList:
+  - org.openrewrite.xml.ChangeTagName:
+      elementName: camel/jbang
+      newName: cli
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.citrus5.camelCliYamlDsl
+displayName: Rename jbang to cli in YAML DSL
+description: Replace jbang YAML key with cli in Citrus Camel YAML DSL.
+recipeList:
+  - org.openrewrite.yaml.ChangeKey:
+      oldKeyPath: $.camel.jbang
+      newKey: cli
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.camel.upgrade.citrus5.camelCliProperties
+displayName: Rename citrus.camel.jbang properties to citrus.camel.cli
+description: Citrus 5.0 renamed configuration properties from citrus.camel.jbang.* to citrus.camel.cli.*.
+recipeList:
+  - org.openrewrite.properties.ChangePropertyKey:
+      oldPropertyKey: (.*)citrus.camel.jbang.version
+      newPropertyKey: $1citrus.camel.cli.version
+      regex: true
+  - org.openrewrite.properties.ChangePropertyKey:
+      oldPropertyKey: (.*)citrus.camel.jbang.work.dir
+      newPropertyKey: $1citrus.camel.cli.work.dir
+      regex: true
+  - org.openrewrite.properties.ChangePropertyKey:
+      oldPropertyKey: (.*)citrus.camel.jbang.app
+      newPropertyKey: $1citrus.camel.cli.app
+      regex: true
+  - org.openrewrite.properties.ChangePropertyKey:
+      oldPropertyKey: (.*)citrus.camel.jbang.kamelets.version
+      newPropertyKey: $1citrus.camel.cli.kamelets.version
+      regex: true
+  - org.openrewrite.properties.ChangePropertyKey:
+      oldPropertyKey: (.*)citrus.camel.jbang.trust.url
+      newPropertyKey: $1citrus.camel.cli.trust.url
+      regex: true
+  - org.openrewrite.properties.ChangePropertyKey:
+      oldPropertyKey: (.*)citrus.camel.jbang.verbose
+      newPropertyKey: $1citrus.camel.cli.verbose
+      regex: true
+  - org.openrewrite.properties.ChangePropertyKey:
+      oldPropertyKey: (.*)citrus.camel.jbang.auto.remove.resources
+      newPropertyKey: $1citrus.camel.cli.auto.remove.resources
+      regex: true
+  - org.openrewrite.properties.ChangePropertyKey:
+      oldPropertyKey: (.*)citrus.camel.jbang.auto.remove.plugins
+      newPropertyKey: $1citrus.camel.cli.auto.remove.plugins
+      regex: true
+  - org.openrewrite.properties.ChangePropertyKey:
+      oldPropertyKey: (.*)citrus.camel.jbang.dump.integration.output
+      newPropertyKey: $1citrus.camel.cli.dump.integration.output
+      regex: true
+  - org.openrewrite.properties.ChangePropertyKey:
+      oldPropertyKey: (.*)citrus.camel.jbang.wait.for.running.state
+      newPropertyKey: $1citrus.camel.cli.wait.for.running.state
+      regex: true
